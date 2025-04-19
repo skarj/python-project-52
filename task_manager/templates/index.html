@@ -1,1 +1,11 @@
-<h1>Hello, {{ who }}!</h1>
+{% extends "layout.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-body p-5 bg-light">
+        <div class="display-4">Добро пожаловать!</div>
+        <p class="lead">Менеджер задач</p>
+        <hr>
+        <a class="btn btn-primary btn-lg" href="https://ru.hexlet.io">Хекслет</a>
+    </div>
+</div>
+{% endblock %}
