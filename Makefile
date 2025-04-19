@@ -31,3 +31,7 @@ build:
 .PHONY: render-start
 render-start:
 	gunicorn task_manager.wsgi
+
+.PHONY: dev-start
+dev-start:
+	@$(MANAGE) runserver
