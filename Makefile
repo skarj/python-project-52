@@ -28,6 +28,6 @@ lint:
 build:
 	./build.sh
 
-.PHONY: render-star
+.PHONY: render-start
 render-start:
 	gunicorn task_manager.wsgi
