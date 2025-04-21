@@ -1,5 +1,28 @@
-from django.shortcuts import render
+from django.contrib.auth import login
+from django.shortcuts import redirect, render
+from django.views import View
+
+from task_manager import forms
 
 
-def index(request):
-    return render(request, 'index.html')
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+
+        return render(request, 'index.html')
+
+
+class LoginView(View):
+    def get(self, request, *args, **kwargs):
+        form = forms.LoginForm()
+
+        return render(request, 'login.html', {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = forms.LoginForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+
+            return redirect('index')
+
+        return render(request, 'login.html', {'form': form})

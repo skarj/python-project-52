@@ -1,19 +1,19 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.shortcuts import redirect, render, get_object_or_404
-
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from task_manager.users import forms
 
 
-def index(request):
-    users = User.objects.all()
-    return render(
-        request,
-        'users/index.html',
-        {'users': users}
-    )
+class UserIndex(View):
+    def get(self, request, *args, **kwargs):
+        users = User.objects.all()
+        return render(
+            request,
+            'users/index.html',
+            {'users': users}
+        )
 
 
 class UserCreateView(View):
