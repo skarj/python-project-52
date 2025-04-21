@@ -32,9 +32,7 @@ class UserCreateView(View):
             messages.success(
                 request, "Пользователь успешно зарегистрирован"
             )
-            # user = form.save()
-            # login(request, user)
-            return redirect('users_index')
+            return redirect('login')
 
         return render(
             request, 'users/create.html', {'form': form}

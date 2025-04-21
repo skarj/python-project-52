@@ -1,4 +1,5 @@
-from django.contrib.auth import login
+from django.contrib import messages
+from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.views import View
 
@@ -26,3 +27,13 @@ class LoginView(View):
             return redirect('index')
 
         return render(request, 'login.html', {'form': form})
+
+
+class LogoutView(View):
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        messages.info(
+            request, 'Вы разлогинены'
+        )
+
+        return redirect('index')

@@ -19,30 +19,45 @@
         <div class="collapse navbar-collapse" id="navbarToggleExternalContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/users/">Пользователи</a>
+                    <a class="nav-link" href="{% url 'users_index' %}">Пользователи</a>
                 </li>
-
             </ul>
             <ul class="navbar-nav">
-
+                {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/login/">Вход</a>
+                    <a class="nav-link" href="/logout/">Статусы</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/users/create/">Регистрация</a>
+                    <a class="nav-link" href="/logout/">Метки</a>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout/">Задачи</a>
+                </li>
+                <ul class="navbar-nav">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <input class="btn nav-link" type="submit" value="Выход">
+                    </form>
+                </ul>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users_create' %}">Регистрация</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
 
     <div class="container wrapper flex-grow-1">
         {% if messages %}
-        <div class="alert {% if message.tags %}{{ message.tags }}{% else %}alert-success {% endif %}alert-dismissible fade show" role="alert">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show" role="alert">
+            {{ message }}
         </div>
+        {% endfor %}
         {% endif %}
         <h1 class="my-4">{% block title %}{% endblock %}</h1>
         {% block content %}{% endblock %}
