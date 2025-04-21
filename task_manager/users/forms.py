@@ -24,11 +24,13 @@ class UserCreateForm(UserCreationForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя пользователя'})
     )
     password1 = forms.CharField(
+        required=True,
         label="Пароль",
         help_text="Ваш пароль должен содержать как минимум 3 символа.",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'})
     )
     password2 = forms.CharField(
+        required=True,
         label="Подтверждение пароля",
         help_text="Для подтверждения введите, пожалуйста, пароль ещё раз.",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Подтверждение пароля'})
