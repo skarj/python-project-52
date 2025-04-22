@@ -54,7 +54,14 @@
     <div class="container wrapper flex-grow-1">
         {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show" role="alert">
+        <div class="alert
+            {% if message.level_tag == 'error' %}
+            alert-danger
+            {% else %}
+            alert-{{ message.level_tag }}
+            {% endif %}"
+            alert-dismissible fade show"
+            role="alert">
             {{ message }}
         </div>
         {% endfor %}

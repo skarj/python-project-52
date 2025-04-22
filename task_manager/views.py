@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 
 from task_manager import forms
+from task_manager.mixins import LoginRequiredMixin
 
 
 class IndexView(View):
@@ -28,8 +29,7 @@ class LoginView(View):
 
         return render(request, 'login.html', {'form': form})
 
-
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         logout(request)
         messages.info(

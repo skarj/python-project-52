@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
+from task_manager.mixins import LoginRequiredMixin
 from task_manager.users import forms
 
 
@@ -38,7 +39,7 @@ class UserCreateView(View):
             request, 'users/create.html', {'form': form}
         )
 
-class UserDeleteView(View):
+class UserDeleteView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get('id')
         user = get_object_or_404(User, id=user_id)
@@ -57,8 +58,7 @@ class UserDeleteView(View):
 
         return redirect('users_index')
 
-
-class UserUpdateView(View):
+class UserUpdateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get("id")
         user = get_object_or_404(User, id=user_id)
