@@ -44,6 +44,13 @@ class UserDeleteView(LoginRequiredMixin, View):
         user_id = kwargs.get('id')
         user = get_object_or_404(User, id=user_id)
 
+        if request.user.id != user_id:
+            messages.error(
+                request, 'У вас нет прав для изменения другого пользователя.'
+            )
+
+            return redirect('users_index')
+
         return render(
             request, 'users/delete.html', {'user': user}
         )
@@ -63,6 +70,13 @@ class UserUpdateView(LoginRequiredMixin, View):
         user_id = kwargs.get("id")
         user = get_object_or_404(User, id=user_id)
         form = forms.UserCreateForm(instance=user)
+
+        if request.user.id != user_id:
+            messages.error(
+                request, 'У вас нет прав для изменения другого пользователя.'
+            )
+
+            return redirect('users_index')
 
         return render(
             request, 'users/update.html', {'form': form}

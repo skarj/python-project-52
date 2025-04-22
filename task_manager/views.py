@@ -24,10 +24,14 @@ class LoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            messages.info(
+                request, 'Вы залогинены'
+            )
 
             return redirect('index')
 
         return render(request, 'login.html', {'form': form})
+
 
 class LogoutView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
