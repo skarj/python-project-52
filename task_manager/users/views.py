@@ -16,7 +16,6 @@ class UserIndex(View):
             {'users': users}
         )
 
-
 class UserCreateView(View):
     def get(self, request, *args, **kwargs):
         form = forms.UserCreateForm()
@@ -38,6 +37,7 @@ class UserCreateView(View):
         return render(
             request, 'users/create.html', {'form': form}
         )
+
 
 class UserDeleteView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -64,6 +64,7 @@ class UserDeleteView(LoginRequiredMixin, View):
         )
 
         return redirect('users_index')
+
 
 class UserUpdateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
