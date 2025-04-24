@@ -2,7 +2,7 @@ MANAGE := uv run python manage.py
 
 .PHONY: test
 test:
-	uv run pytest
+	@$(MANAGE) test
 
 .PHONY: install
 install:

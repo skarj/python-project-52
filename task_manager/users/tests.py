@@ -3,39 +3,78 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 
+class TestUsers(TestCase):
+    password = 'testpass123'
 
-# class TestUsers(TestCase):
-#     def test_users_list(self):
-#         response = self.client.get(reverse('users_index'))
-#         self.assertEqual(response.status_code, 200)
-
-#         self.assertIn('users', response.context)
-#         users = response.context['users']
-
-#         self.assertTrue(len(users) > 0)
-
-
-class UsersTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(
             first_name='Jack',
             last_name='Black',
             username='jblack',
-            # password1='123',
-            # password2='123'
         )
+
+        self.user.set_password(self.password)
+        self.user.save()
+
+        self.client.login(
+            username='jblack',
+            password=self.password
+        )
+
 
     def test_update_user(self):
         user_id = self.user.pk
 
         update_data = {
-            'username': 'jackblack',
+            'username': 'jdaniel',
+            'first_name': 'Jack',
+            'last_name': 'Daniel',
+            'password1': self.password,
+            'password2': self.password
         }
 
-        response = self.client.post(
+        self.client.post(
             reverse('users_update', kwargs={'id': user_id}),
             data=update_data
         )
 
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, 'jdaniel')
+        self.assertEqual(self.user.first_name, 'Jack')
+        self.assertEqual(self.user.last_name, 'Daniel')
+
+        self.client.login(
+            username='jblack',
+            password=self.password
+        )
+
+
+    def test_create_user(self):
+        create_data = {
+            'username': 'ddefo',
+            'first_name': 'Daniel',
+            'last_name': 'Defo',
+            'password1': self.password,
+            'password2': self.password
+        }
+
+        self.client.post(
+            reverse('users_create'),
+            data=create_data
+        )
+
+        user = User.objects.get(username='ddefo')
+        self.assertEqual(user.username, 'ddefo')
+        self.assertEqual(user.first_name, 'Daniel')
+        self.assertEqual(user.last_name, 'Defo')
+
+
+    def test_delete_user(self):
+        user_id = self.user.pk
+
+        response = self.client.post(
+            reverse('users_delete', kwargs={'id': user_id}),
+        )
+
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.context['user'].username, 'jackblack')
+        self.assertFalse(User.objects.filter(pk=user_id).exists())
