@@ -21,39 +21,19 @@ class TestUsers(TestCase):
             password=self.password
         )
 
-
-    def test_update_user(self):
-        user_id = self.user.pk
+    def test_create_update_delete_user(self):
+        create_data = {
+            'username': 'ddefo',
+            'first_name': 'Daniel',
+            'last_name': 'Defo',
+            'password1': self.password,
+            'password2': self.password
+        }
 
         update_data = {
             'username': 'jdaniel',
             'first_name': 'Jack',
             'last_name': 'Daniel',
-            'password1': self.password,
-            'password2': self.password
-        }
-
-        self.client.post(
-            reverse('users_update', kwargs={'id': user_id}),
-            data=update_data
-        )
-
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.username, 'jdaniel')
-        self.assertEqual(self.user.first_name, 'Jack')
-        self.assertEqual(self.user.last_name, 'Daniel')
-
-        self.client.login(
-            username='jblack',
-            password=self.password
-        )
-
-
-    def test_create_user(self):
-        create_data = {
-            'username': 'ddefo',
-            'first_name': 'Daniel',
-            'last_name': 'Defo',
             'password1': self.password,
             'password2': self.password
         }
@@ -68,13 +48,18 @@ class TestUsers(TestCase):
         self.assertEqual(user.first_name, 'Daniel')
         self.assertEqual(user.last_name, 'Defo')
 
-
-    def test_delete_user(self):
-        user_id = self.user.pk
-
-        response = self.client.post(
-            reverse('users_delete', kwargs={'id': user_id}),
+        self.client.post(
+            reverse('users_update', kwargs={'id': user.id}),
+            data=update_data
         )
 
-        self.assertEqual(response.status_code, 302)
-        self.assertFalse(User.objects.filter(pk=user_id).exists())
+        user.refresh_from_db()
+        self.assertEqual(user.username, 'jdaniel')
+        self.assertEqual(user.first_name, 'Jack')
+        self.assertEqual(user.last_name, 'Daniel')
+
+        self.client.post(
+            reverse('users_delete', kwargs={'id': user.id}),
+        )
+
+        self.assertFalse(User.objects.filter(pk=user.id).exists())

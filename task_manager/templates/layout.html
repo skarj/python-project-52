@@ -25,7 +25,7 @@
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout/">Статусы</a>
+                    <a class="nav-link" href="{% url 'statuses_index' %}">Статусы</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout/">Метки</a>
