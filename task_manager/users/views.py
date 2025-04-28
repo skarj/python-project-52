@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.db.models import ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
@@ -58,10 +59,14 @@ class UserDeleteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         user_id = kwargs.get('id')
         user = get_object_or_404(User, id=user_id)
-        user.delete()
-        messages.success(
-            request, 'Пользователь успешно удален'
-        )
+
+        try:
+            user.delete()
+            messages.success(
+                request, 'Пользователь успешно удален'
+            )
+        except ProtectedError:
+            messages.error(request, "Невозможно удалить пользователя, потому что он используется")
 
         return redirect('users_index')
 

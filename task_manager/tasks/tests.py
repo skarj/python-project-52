@@ -1,11 +1,11 @@
 from django.contrib.auth.models import User
+from task_manager.tasks.models import Task
 from django.test import TestCase
 from django.urls import reverse
-
 from task_manager.statuses.models import Status
 
 
-class TestUsers(TestCase):
+class TestTasks(TestCase):
     password = 'testpass123'
 
     def setUp(self):
@@ -24,32 +24,40 @@ class TestUsers(TestCase):
         )
 
     def test_create_update_delete_status(self):
+        status = Status(name='status')
+        status.save()
+
         create_data = {
-            'name': 'In Progress',
+            'name': 'Task1',
+            'description': 'Description',
+            'status': status.id,
         }
 
         update_data = {
-            'name': 'Resolved',
+            'name': 'Task2',
+            'description': 'Description2',
+            'status': status.id,
         }
 
         self.client.post(
-            reverse('statuses_create'),
+            reverse('tasks_create'),
             data=create_data
         )
 
-        status = Status.objects.get(name='In Progress')
-        self.assertEqual(status.name, 'In Progress')
+        task = Task.objects.get(name='Task1')
+        self.assertEqual(task.name, 'Task1')
 
         self.client.post(
-            reverse('statuses_update', kwargs={'id': status.id}),
+            reverse('tasks_update', kwargs={'id': task.id}),
             data=update_data
         )
 
-        status.refresh_from_db()
-        self.assertEqual(status.name, 'Resolved')
+        task.refresh_from_db()
+        self.assertEqual(task.name, 'Task2')
+        self.assertEqual(task.description, 'Description2')
 
         self.client.post(
-            reverse('statuses_delete', kwargs={'id': status.id}),
+            reverse('tasks_delete', kwargs={'id': status.id}),
         )
 
-        self.assertFalse(Status.objects.filter(pk=status.id).exists())
+        self.assertFalse(Task.objects.filter(pk=status.id).exists())

@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
@@ -51,10 +52,14 @@ class StatusDeleteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         status_id = kwargs.get('id')
         status = get_object_or_404(Status, id=status_id)
-        status.delete()
-        messages.success(
-            request, 'Статус успешно удален'
-        )
+
+        try:
+            status.delete()
+            messages.success(
+                request, 'Статус успешно удален'
+            )
+        except ProtectedError:
+            messages.error(request, "Невозможно удалить статус, потому что он используется")
 
         return redirect('statuses_index')
 
