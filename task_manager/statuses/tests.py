@@ -19,7 +19,7 @@ class TestUsers(TestCase):
         self.user.save()
 
         self.client.login(
-            username='jblack',
+            username=self.user.username,
             password=self.password
         )
 
@@ -37,8 +37,8 @@ class TestUsers(TestCase):
             data=create_data
         )
 
-        status = Status.objects.get(name='In Progress')
-        self.assertEqual(status.name, 'In Progress')
+        status = Status.objects.get(name=create_data['name'])
+        self.assertEqual(status.name, create_data['name'])
 
         self.client.post(
             reverse('statuses_update', kwargs={'id': status.id}),
@@ -46,7 +46,7 @@ class TestUsers(TestCase):
         )
 
         status.refresh_from_db()
-        self.assertEqual(status.name, 'Resolved')
+        self.assertEqual(status.name, update_data['name'])
 
         self.client.post(
             reverse('statuses_delete', kwargs={'id': status.id}),

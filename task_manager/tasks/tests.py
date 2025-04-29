@@ -20,7 +20,7 @@ class TestTasks(TestCase):
         self.user.save()
 
         self.client.login(
-            username='jblack',
+            username=self.user.username,
             password=self.password
         )
 
@@ -45,8 +45,8 @@ class TestTasks(TestCase):
             data=create_data
         )
 
-        task = Task.objects.get(name='Task1')
-        self.assertEqual(task.name, 'Task1')
+        task = Task.objects.get(name=create_data['name'])
+        self.assertEqual(task.name, create_data['name'])
 
         self.client.post(
             reverse('tasks_update', kwargs={'id': task.id}),
@@ -54,8 +54,8 @@ class TestTasks(TestCase):
         )
 
         task.refresh_from_db()
-        self.assertEqual(task.name, 'Task2')
-        self.assertEqual(task.description, 'Description2')
+        self.assertEqual(task.name, update_data['name'])
+        self.assertEqual(task.description, update_data['description'])
 
         self.client.post(
             reverse('tasks_delete', kwargs={'id': status.id}),
