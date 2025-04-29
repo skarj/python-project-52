@@ -3,9 +3,9 @@ from django.db.models import ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
-from task_manager.mixins import LoginRequiredMixin
 from task_manager.labels.forms import LabelCreateForm
 from task_manager.labels.models import Label
+from task_manager.mixins import LoginRequiredMixin
 
 
 class LabelIndex(LoginRequiredMixin, View):
