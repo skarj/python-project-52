@@ -271,7 +271,7 @@ wheels = [
 [[package]]
 name = "hexlet-code"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "dj-database-url" },
     { name = "django" },
@@ -289,6 +289,7 @@ dev = [
     { name = "ipython" },
     { name = "isort" },
     { name = "pre-commit" },
+    { name = "pytest" },
     { name = "pytest-django" },
     { name = "ruff" },
 ]
@@ -311,6 +312,7 @@ dev = [
     { name = "ipython", specifier = ">=9.1.0" },
     { name = "isort", specifier = ">=6.0.1" },
     { name = "pre-commit", specifier = ">=4.2.0" },
+    { name = "pytest", specifier = ">=8.3.5" },
     { name = "pytest-django", specifier = ">=4.11.1" },
     { name = "ruff", specifier = ">=0.11.6" },
 ]
