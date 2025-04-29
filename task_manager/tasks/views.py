@@ -12,15 +12,20 @@ class TaskIndex(LoginRequiredMixin, View):
         tasks = Task.objects.all()
         filter_form = TaskFilterForm(request.GET)
 
+        print(filter_form.errors)
+
         if filter_form.is_valid():
             status = filter_form.cleaned_data.get('status')
             assigned_to = filter_form.cleaned_data.get('assigned_to')
+            label = filter_form.cleaned_data.get('label')
             assigned_to_me = filter_form.cleaned_data.get('assigned_to_me')
 
             if status:
                 tasks = tasks.filter(status=status)
             if assigned_to:
                 tasks = tasks.filter(assigned_to=assigned_to)
+            if label:
+                tasks = tasks.filter(labels__name=label)
             if assigned_to_me:
                 tasks = tasks.filter(author=request.user.id)
 

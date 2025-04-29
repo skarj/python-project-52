@@ -58,7 +58,7 @@ class TaskCreateForm(forms.ModelForm):
                 else:
                     field.widget.attrs['class'] += ' is-valid'
 
-        # Custom labels for dropdowns
+        # Custom labels for User dropdown
         self.fields['assigned_to'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
 
 
@@ -74,6 +74,13 @@ class TaskFilterForm(forms.ModelForm):
         queryset=User.objects.all(),
         required=False,
         label="Исполнитель",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    label = forms.ModelChoiceField(
+        queryset=Label.objects.all(),
+        required=False,
+        label="Метка",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
@@ -103,3 +110,6 @@ class TaskFilterForm(forms.ModelForm):
                     field.widget.attrs['class'] += ' is-invalid'
                 else:
                     field.widget.attrs['class'] += ' is-valid'
+
+        # Custom labels for User dropdown
+        self.fields['assigned_to'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
