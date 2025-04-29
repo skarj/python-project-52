@@ -13,10 +13,10 @@ class TaskIndex(LoginRequiredMixin, View):
         filter_form = TaskFilterForm(request.GET)
 
         if filter_form.is_valid():
-            status = filter_form.cleaned_data.get('status')
-            assigned_to = filter_form.cleaned_data.get('assigned_to')
-            label = filter_form.cleaned_data.get('label')
-            assigned_to_me = filter_form.cleaned_data.get('assigned_to_me')
+            status = filter_form.cleaned_data.get("status")
+            assigned_to = filter_form.cleaned_data.get("assigned_to")
+            label = filter_form.cleaned_data.get("label")
+            assigned_to_me = filter_form.cleaned_data.get("assigned_to_me")
 
             if status:
                 tasks = tasks.filter(status=status)
@@ -28,18 +28,15 @@ class TaskIndex(LoginRequiredMixin, View):
                 tasks = tasks.filter(author=request.user.id)
 
         return render(
-            request,
-            'tasks/index.html',
-            {'tasks': tasks, 'form': filter_form}
+            request, "tasks/index.html", {"tasks": tasks, "form": filter_form}
         )
+
 
 class TaskCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = TaskCreateForm()
 
-        return render(
-            request, 'tasks/create.html', {'form': form}
-        )
+        return render(request, "tasks/create.html", {"form": form})
 
     def post(self, request, *args, **kwargs):
         form = TaskCreateForm(request.POST)
@@ -49,66 +46,50 @@ class TaskCreateView(LoginRequiredMixin, View):
             task.author = request.user
             task.save()
 
-            messages.success(
-                request, 'Задача успешно создана'
-            )
-            return redirect('tasks_index')
+            messages.success(request, "Задача успешно создана")
+            return redirect("tasks_index")
 
-        return render(
-            request, 'tasks/create.html', {'form': form}
-        )
+        return render(request, "tasks/create.html", {"form": form})
 
 
 class TaskDeleteView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        task_id = kwargs.get('id')
+        task_id = kwargs.get("id")
         task = get_object_or_404(Task, id=task_id)
 
         if request.user.id != task.author.id:
-            messages.error(
-                request, 'Задачу может удалить только ее автор'
-            )
+            messages.error(request, "Задачу может удалить только ее автор")
 
-            return redirect('tasks_index')
+            return redirect("tasks_index")
 
-        return render(
-            request, 'tasks/delete.html', {'task': task}
-        )
+        return render(request, "tasks/delete.html", {"task": task})
 
     def post(self, request, *args, **kwargs):
-        task_id = kwargs.get('id')
+        task_id = kwargs.get("id")
         task = get_object_or_404(Task, id=task_id)
         task.delete()
-        messages.success(
-            request, 'Задача успешно удалена'
-        )
+        messages.success(request, "Задача успешно удалена")
 
-        return redirect('tasks_index')
+        return redirect("tasks_index")
 
 
 class TaskUpdateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        task_id = kwargs.get('id')
+        task_id = kwargs.get("id")
         task = get_object_or_404(Task, id=task_id)
         form = TaskCreateForm(instance=task)
 
-        return render(
-            request, 'tasks/update.html', {'form': form}
-        )
+        return render(request, "tasks/update.html", {"form": form})
 
     def post(self, request, *args, **kwargs):
-        task_id = kwargs.get('id')
+        task_id = kwargs.get("id")
         task = get_object_or_404(Task, id=task_id)
         form = TaskCreateForm(request.POST, instance=task)
 
         if form.is_valid():
             form.save()
-            messages.success(
-                request, 'Задача успешно изменена'
-            )
+            messages.success(request, "Задача успешно изменена")
 
-            return redirect('tasks_index')
+            return redirect("tasks_index")
 
-        return render(
-            request, 'tasks/update.html', {'form': form}
-        )
+        return render(request, "tasks/update.html", {"form": form})

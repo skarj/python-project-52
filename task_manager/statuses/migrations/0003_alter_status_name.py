@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('statuses', '0002_remove_status_author'),
+        ("statuses", "0002_remove_status_author"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='status',
-            name='name',
+            model_name="status",
+            name="name",
             field=models.CharField(max_length=255, unique=True),
         ),
     ]
