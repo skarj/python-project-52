@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from task_manager.statuses.models import Status
+from task_manager.labels.models import Label
 
 
 class Task(models.Model):
@@ -22,5 +23,14 @@ class Task(models.Model):
         Status,
         on_delete=models.PROTECT
     )
+    labels = models.ManyToManyField(
+        Label,
+        through='LabelTask'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class LabelTask(models.Model):
+    label = models.ForeignKey(Label, on_delete=models.PROTECT)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
