@@ -25,7 +25,7 @@ class StatusCreateView(LoginRequiredMixin, View):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Статус успешно cоздан")
+            messages.success(request, "Статус успешно создан")
             return redirect("statuses_index")
 
         return render(request, "statuses/create.html", {"form": form})
