@@ -5,7 +5,7 @@ from django.urls import reverse
 from task_manager.labels.models import Label
 
 
-class TestUsers(TestCase):
+class TestLabels(TestCase):
     password = "testpass123"
 
     def setUp(self):
@@ -20,7 +20,7 @@ class TestUsers(TestCase):
 
         self.client.login(username=self.user.username, password=self.password)
 
-    def test_create_update_delete_status(self):
+    def test_create_update_delete_label(self):
         create_data = {
             "name": "WIP",
         }

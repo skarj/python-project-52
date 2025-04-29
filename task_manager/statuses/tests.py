@@ -5,7 +5,7 @@ from django.urls import reverse
 from task_manager.statuses.models import Status
 
 
-class TestUsers(TestCase):
+class TestStatuses(TestCase):
     password = "testpass123"
 
     def setUp(self):

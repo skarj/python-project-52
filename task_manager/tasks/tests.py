@@ -21,7 +21,7 @@ class TestTasks(TestCase):
 
         self.client.login(username=self.user.username, password=self.password)
 
-    def test_create_update_delete_status(self):
+    def test_create_update_delete_task(self):
         status = Status(name="status")
         status.save()
 
