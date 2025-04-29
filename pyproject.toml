@@ -20,6 +20,7 @@ dev = [
     "django-extensions>=4.1",
     "ipython>=9.1.0",
     "isort>=6.0.1",
+    "pre-commit>=4.2.0",
     "pytest-django>=4.11.1",
     "ruff>=0.11.6",
 ]
