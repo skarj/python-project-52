@@ -17,7 +17,7 @@ class LabelIndex(LoginRequiredMixin, View):
             {'labels': labels}
         )
 
-class LabelCreateView(View):
+class LabelCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = LabelCreateForm()
 

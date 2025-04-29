@@ -17,7 +17,8 @@ class StatusIndex(LoginRequiredMixin, View):
             {'statuses': statuses}
         )
 
-class StatusCreateView(View):
+
+class StatusCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = StatusCreateForm()
 
