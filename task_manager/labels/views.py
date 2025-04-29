@@ -25,7 +25,7 @@ class LabelCreateView(LoginRequiredMixin, View):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Метка успешно cоздана")
+            messages.success(request, "Метка успешно создана")
             return redirect("labels_index")
 
         return render(request, "labels/create.html", {"form": form})
