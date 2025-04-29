@@ -7,7 +7,7 @@ class StatusCreateForm(forms.ModelForm):
     name = forms.CharField(
         max_length=150,
         required=True,
-        label="Имя",
+        label='Имя',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'})
     )
 

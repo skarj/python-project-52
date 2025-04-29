@@ -32,7 +32,7 @@ class StatusCreateView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
             messages.success(
-                request, "Статус успешно cоздан"
+                request, 'Статус успешно cоздан'
             )
             return redirect('statuses_index')
 
@@ -60,14 +60,14 @@ class StatusDeleteView(LoginRequiredMixin, View):
                 request, 'Статус успешно удален'
             )
         except ProtectedError:
-            messages.error(request, "Невозможно удалить статус, потому что он используется")
+            messages.error(request, 'Невозможно удалить статус, потому что он используется')
 
         return redirect('statuses_index')
 
 
 class StatusUpdateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        status_id = kwargs.get("id")
+        status_id = kwargs.get('id')
         status = get_object_or_404(Status, id=status_id)
         form = StatusCreateForm(instance=status)
 

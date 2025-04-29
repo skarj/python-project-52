@@ -52,7 +52,7 @@ class TaskCreateView(LoginRequiredMixin, View):
             task.save()
 
             messages.success(
-                request, "Задача успешно создана"
+                request, 'Задача успешно создана'
             )
             return redirect('tasks_index')
 
@@ -90,7 +90,7 @@ class TaskDeleteView(LoginRequiredMixin, View):
 
 class TaskUpdateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        task_id = kwargs.get("id")
+        task_id = kwargs.get('id')
         task = get_object_or_404(Task, id=task_id)
         form = TaskCreateForm(instance=task)
 

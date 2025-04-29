@@ -31,7 +31,7 @@ class UserCreateView(View):
         if form.is_valid():
             form.save()
             messages.success(
-                request, "Пользователь успешно зарегистрирован"
+                request, 'Пользователь успешно зарегистрирован'
             )
             return redirect('login')
 
@@ -66,14 +66,14 @@ class UserDeleteView(LoginRequiredMixin, View):
                 request, 'Пользователь успешно удален'
             )
         except ProtectedError:
-            messages.error(request, "Невозможно удалить пользователя, потому что он используется")
+            messages.error(request, 'Невозможно удалить пользователя, потому что он используется')
 
         return redirect('users_index')
 
 
 class UserUpdateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        user_id = kwargs.get("id")
+        user_id = kwargs.get('id')
         user = get_object_or_404(User, id=user_id)
         form = forms.UserCreateForm(instance=user)
 

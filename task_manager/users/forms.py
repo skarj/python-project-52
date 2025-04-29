@@ -7,32 +7,32 @@ class UserCreateForm(UserCreationForm):
     first_name = forms.CharField(
         max_length=150,
         required=True,
-        label="Имя",
+        label='Имя',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'})
     )
     last_name = forms.CharField(
         max_length=150,
         required=True,
-        label="Фамилия",
+        label='Фамилия',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия'})
     )
     username = forms.CharField(
         max_length=150,
         required=True,
-        label="Имя пользователя",
-        help_text="Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.",
+        label='Имя пользователя',
+        help_text='Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя пользователя'})
     )
     password1 = forms.CharField(
         required=True,
-        label="Пароль",
-        help_text="Ваш пароль должен содержать как минимум 3 символа.",
+        label='Пароль',
+        help_text='Ваш пароль должен содержать как минимум 3 символа.',
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'})
     )
     password2 = forms.CharField(
         required=True,
-        label="Подтверждение пароля",
-        help_text="Для подтверждения введите, пожалуйста, пароль ещё раз.",
+        label='Подтверждение пароля',
+        help_text='Для подтверждения введите, пожалуйста, пароль ещё раз.',
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Подтверждение пароля'})
     )
 

@@ -31,7 +31,7 @@ class LabelCreateView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
             messages.success(
-                request, "Метка успешно cоздана"
+                request, 'Метка успешно cоздана'
             )
             return redirect('labels_index')
 
@@ -59,14 +59,14 @@ class LabelDeleteView(LoginRequiredMixin, View):
                 request, 'Метка успешно удалена'
             )
         except ProtectedError:
-            messages.error(request, "Невозможно удалить метку, потому что она используется")
+            messages.error(request, 'Невозможно удалить метку, потому что она используется')
 
         return redirect('labels_index')
 
 
 class LabelUpdateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        label_id = kwargs.get("id")
+        label_id = kwargs.get('id')
         label = get_object_or_404(Label, id=label_id)
         form = LabelCreateForm(instance=label)
 
