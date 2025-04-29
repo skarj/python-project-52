@@ -26,6 +26,3 @@ dev = [
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "task_manager.settings"
-python_files = ["test_*.py", "*_test.py"]
-addopts = "-v --cov=task_manager"
-testpaths = ["task_manager/tests"]
