@@ -23,3 +23,9 @@ dev = [
     "pytest-django>=4.11.1",
     "ruff>=0.11.6",
 ]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "task_manager.settings"
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-v --cov=task_manager"
+testpaths = ["task_manager/tests"]
