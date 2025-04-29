@@ -14,6 +14,9 @@ dependencies = [
     "uvicorn>=0.34.2",
     "whitenoise[brotli]>=6.9.0",
 ]
+packages = [
+  { include = "task_manager" },
+]
 
 [dependency-groups]
 dev = [
