@@ -37,19 +37,19 @@ class TestUsers(TestCase):
 
         self.client.post(reverse("users_create"), data=create_data)
 
-        user = User.objects.get(username="ddefo")
-        self.assertEqual(user.username, "ddefo")
-        self.assertEqual(user.first_name, "Daniel")
-        self.assertEqual(user.last_name, "Defo")
+        user = User.objects.get(username=create_data["username"])
+        self.assertEqual(user.username, create_data["username"])
+        self.assertEqual(user.first_name, create_data["first_name"])
+        self.assertEqual(user.last_name, create_data["last_name"])
 
         self.client.post(
             reverse("users_update", kwargs={"id": user.id}), data=update_data
         )
 
         user.refresh_from_db()
-        self.assertEqual(user.username, "jdaniel")
-        self.assertEqual(user.first_name, "Jack")
-        self.assertEqual(user.last_name, "Daniel")
+        self.assertEqual(user.username, update_data["username"])
+        self.assertEqual(user.first_name, update_data["first_name"])
+        self.assertEqual(user.last_name, update_data["last_name"])
 
         self.client.post(
             reverse("users_delete", kwargs={"id": user.id}),
