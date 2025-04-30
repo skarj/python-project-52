@@ -35,7 +35,8 @@ class TestStatuses(TestCase):
         self.assertEqual(status.name, create_data["name"])
 
         self.client.post(
-            reverse("statuses_update", kwargs={"id": status.id}), data=update_data
+            reverse("statuses_update", kwargs={"id": status.id}),
+            data=update_data
         )
 
         status.refresh_from_db()

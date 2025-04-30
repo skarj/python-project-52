@@ -11,7 +11,7 @@ exclude = [
     "migrations",
 ]
 
-line-length = 105
+line-length = 80
 indent-width = 4
 
 [lint]

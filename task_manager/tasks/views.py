@@ -102,4 +102,6 @@ class TaskShowView(LoginRequiredMixin, View):
         task = get_object_or_404(Task, id=task_id)
         labels = task.labels.all()
 
-        return render(request, "tasks/show.html", {"task": task, "labels": labels})
+        return render(request, "tasks/show.html", {
+            "task": task, "labels": labels
+        })

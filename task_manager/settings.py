@@ -26,13 +26,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-zbb1f_e8t4@fici$+_681^s48q234mw!yj%c=j!&xm6szdgenc"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 if os.environ.get("DJANGO_DEBUG"):
     DEBUG = True
 else:
     DEBUG = False
-    ALLOWED_HOSTS = ["webserver", "python-project-52-ofex.onrender.com", "127.0.0.1"]
+    ALLOWED_HOSTS = [
+        "webserver",
+        "python-project-52-ofex.onrender.com",
+        "127.0.0.1"
+    ]
 
 
 # Application definition
@@ -102,7 +106,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",  # noqa: E501
         "OPTIONS": {"min_length": 3},
     },
 ]
@@ -127,13 +131,11 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-# This production code might break development mode, so we check whether we're in DEBUG mode
 if not DEBUG:
-    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
-    # and renames the files with unique names for each version to support long-term caching
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    STATICFILES_STORAGE = (
+        "whitenoise.storage.CompressedManifestStaticFilesStorage"  # noqa: E501
+    )
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

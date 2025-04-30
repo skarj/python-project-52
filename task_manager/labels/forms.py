@@ -8,7 +8,9 @@ class LabelCreateForm(forms.ModelForm):
         max_length=150,
         required=True,
         label="Имя",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Имя"}),
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Имя"}
+        ),
     )
 
     class Meta:

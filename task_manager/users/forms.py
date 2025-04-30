@@ -8,7 +8,10 @@ class UserCreateForm(UserCreationForm):
         max_length=150,
         required=True,
         label="Имя",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Имя"}),
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Имя"
+        }),
     )
     last_name = forms.CharField(
         max_length=150,
@@ -22,7 +25,7 @@ class UserCreateForm(UserCreationForm):
         max_length=150,
         required=True,
         label="Имя пользователя",
-        help_text="Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.",
+        help_text="Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.", # noqa: E501
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "Имя пользователя"}
         ),
@@ -40,13 +43,22 @@ class UserCreateForm(UserCreationForm):
         label="Подтверждение пароля",
         help_text="Для подтверждения введите, пожалуйста, пароль ещё раз.",
         widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": "Подтверждение пароля"}
+            attrs={
+                "class": "form-control",
+                "placeholder": "Подтверждение пароля"
+            }
         ),
     )
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "password1", "password2")
+        fields = (
+            "first_name",
+            "last_name",
+            "username",
+            "password1",
+            "password2"
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
