@@ -25,7 +25,7 @@ class UserCreateForm(UserCreationForm):
         max_length=150,
         required=True,
         label="Имя пользователя",
-        help_text="Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.", # noqa: E501
+        help_text="Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.",  # noqa: E501
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "Имя пользователя"}
         ),
