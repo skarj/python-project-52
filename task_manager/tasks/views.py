@@ -45,6 +45,7 @@ class TaskCreateView(LoginRequiredMixin, View):
             task = form.save(commit=False)
             task.author = request.user
             task.save()
+            form.save_m2m()
 
             messages.success(request, "Задача успешно создана")
             return redirect("tasks_index")
