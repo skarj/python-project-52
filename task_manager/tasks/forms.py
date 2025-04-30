@@ -29,7 +29,7 @@ class TaskCreateForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "form-control"}),
     )
 
-    assigned_to = forms.ModelChoiceField(
+    executor = forms.ModelChoiceField(
         queryset=User.objects.all(),
         required=False,
         label="Исполнитель",
@@ -45,7 +45,7 @@ class TaskCreateForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ("name", "description", "status", "assigned_to", "labels")
+        fields = ("name", "description", "status", "executor", "labels")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -61,7 +61,7 @@ class TaskCreateForm(forms.ModelForm):
                     field.widget.attrs["class"] += " is-valid"
 
         # Custom labels for User dropdown
-        self.fields["assigned_to"].label_from_instance = (
+        self.fields["executor"].label_from_instance = (
             lambda obj: f"{obj.first_name} {obj.last_name}"
         )
 
@@ -74,7 +74,7 @@ class TaskFilterForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "form-select ml-2 mr-3"}),
     )
 
-    assigned_to = forms.ModelChoiceField(
+    executor = forms.ModelChoiceField(
         queryset=User.objects.all(),
         required=False,
         label="Исполнитель",
@@ -88,7 +88,7 @@ class TaskFilterForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "form-select ml-2 mr-3"}),
     )
 
-    assigned_to_me = forms.BooleanField(
+    created_by_me = forms.BooleanField(
         required=False,
         label="Только свои задачи",
         widget=forms.CheckboxInput(attrs={"class": "form-check-input mr-3"}),
@@ -97,12 +97,12 @@ class TaskFilterForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ("status", "assigned_to")
+        fields = ("status", "executor")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Custom labels for User dropdown
-        self.fields["assigned_to"].label_from_instance = (
+        self.fields["executor"].label_from_instance = (
             lambda obj: f"{obj.first_name} {obj.last_name}"
         )

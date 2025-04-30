@@ -12,8 +12,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="{{ form.assigned_to.id_for_label }}" class="form-label">{{ form.assigned_to.label }}</label>
-                {{ form.assigned_to }}
+                <label for="{{ form.executor.id_for_label }}" class="form-label">{{ form.executor.label }}</label>
+                {{ form.executor }}
             </div>
 
             <div class="mb-3">
@@ -23,9 +23,9 @@
 
             <div class="mb-3">
                 <div class="form-check">
-                    {{ form.assigned_to_me }}
-                    <label for="{{ form.assigned_to_me.id_for_label }}">
-                        {{ form.assigned_to_me.label }}
+                    {{ form.created_by_me }}
+                    <label for="{{ form.created_by_me.id_for_label }}">
+                        {{ form.created_by_me.label }}
                     </label>
                 </div>
             </div>
@@ -52,7 +52,7 @@
             <td><a href="{% url 'tasks_show' id=task.id %}">{{ task.name }}</a></td>
             <td>{{ task.status.name }}</td>
             <td>{{ task.author.first_name }} {{ task.author.last_name }}</td>
-            <td>{{ task.assigned_to.first_name }} {{ task.assigned_to.last_name }}</td>
+            <td>{{ task.executor.first_name }} {{ task.executor.last_name }}</td>
             <td>{{ task.created_at }}</td>
             <td>
                 <a href="{% url 'tasks_update' id=task.id %}">Изменить</a>
