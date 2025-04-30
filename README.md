@@ -5,7 +5,7 @@ Task Manager – a task management system similar to http://www.redmine.org/. It
 
 ## Access
 Application is deployed to [render.com](https://render.com/)
-[Page Analyzer](https://python-project-83-yclu.onrender.com/)
+[Task Manager](https://python-project-52-ofex.onrender.com/)
 
 ## Requirements
 Python 3.10+
