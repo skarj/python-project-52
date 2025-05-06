@@ -83,5 +83,5 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             messages.error(
                 request, "Невозможно удалить пользователя, так как он связан с другими объектами."  # noqa E501
             )
-            logger.error(f"ProtectedError when deleting user {self.object.id}: {e}") # noqa: E501
+            logger.error(f"ProtectedError when deleting user {self.object.id}: {e}")  # noqa: E501
             return self.get(request, *args, **kwargs)
