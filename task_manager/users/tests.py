@@ -16,7 +16,6 @@ class TestUsers(TestCase):
         self.user.save()
         self.client.login(username="jblack", password=self.password)
 
-
     def test_create_user(self):
         create_data = {
             "username": "ddefo",

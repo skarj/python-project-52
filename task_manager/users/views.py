@@ -44,7 +44,9 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user.id == self.kwargs.get("id")
 
     def handle_no_permission(self):
-        messages.error(self.request, "У вас нет прав для изменения другого пользователя.")  # noqa E501
+        messages.error(
+            self.request, "У вас нет прав для изменения другого пользователя."
+        )
         return redirect("users_index")
 
     def form_valid(self, form):
@@ -66,21 +68,20 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user.id == user.id
 
     def handle_no_permission(self):
-        messages.error(self.request, "У вас нет прав для изменения другого пользователя.")  # noqa E501
+        messages.error(
+            self.request, "У вас нет прав для изменения другого пользователя."
+        )
         return redirect("users_index")
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    def post(self, request, *args, **kwargs):
         try:
-            response = super().delete(request, *args, **kwargs)
+            response = super().post(request, *args, **kwargs)
             messages.success(request, "Пользователь успешно удален")
 
             return response
         except ProtectedError as e:
             messages.error(
-                request,
-                "Невозможно удалить пользователя, потому что он используется"
+                request, "Невозможно удалить пользователя, так как он связан с другими объектами."  # noqa E501
             )
-            logger.error(f"Failed to delete user. User ID: {self.object.id}. Error: {e}")  # noqa E501
-
-            return redirect(self.success_url)
+            logger.error(f"ProtectedError when deleting user {self.object.id}: {e}") # noqa: E501
+            return self.get(request, *args, **kwargs)
