@@ -1,9 +1,10 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout
-from django.shortcuts import redirect, render
+from django.views import View
+from django.contrib.auth import views as auth_views
+from django.shortcuts import render
 from django.views import View
 
-from task_manager import forms
+from task_manager.forms import LoginForm
 from task_manager.mixins import LoginRequiredMixin
 
 
@@ -13,27 +14,19 @@ class IndexView(View):
         return render(request, "index.html")
 
 
-class LoginView(View):
-    def get(self, request, *args, **kwargs):
-        form = forms.LoginForm()
+class LoginView(auth_views.LoginView):
+    form_class = LoginForm
+    template_name = 'login.html'
+    next_page = "index"
 
-        return render(request, "login.html", {"form": form})
-
-    def post(self, request, *args, **kwargs):
-        form = forms.LoginForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            messages.info(request, "Вы залогинены")
-
-            return redirect("index")
-
-        return render(request, "login.html", {"form": form})
+    def form_valid(self, form):
+        messages.info(self.request, "Вы залогинены")
+        return super().form_valid(form)
 
 
-class LogoutView(LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-        logout(request)
-        messages.info(request, "Вы разлогинены")
+class LogoutView(LoginRequiredMixin, auth_views.LogoutView):
+    next_page = "index"
 
-        return redirect("index")
+    def dispatch(self, request, *args, **kwargs):
+        messages.info(self.request, "Вы разлогинены")
+        return super().dispatch(request, *args, **kwargs)
