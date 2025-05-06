@@ -65,7 +65,6 @@ class UserCreateForm(UserCreationForm):
         is_bound = self.is_bound
 
         for name, field in self.fields.items():
-            field.widget.attrs["class"] = "form-control"
             if is_bound:
                 if self.errors.get(name):
                     field.widget.attrs["class"] += " is-invalid"

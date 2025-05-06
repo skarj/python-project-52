@@ -19,7 +19,7 @@ class LoginView(auth_views.LoginView):
     next_page = "index"
 
     def form_valid(self, form):
-        messages.info(self.request, "Вы залогинены")
+        messages.success(self.request, "Вы залогинены")
         return super().form_valid(form)
 
 
