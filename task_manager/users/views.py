@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import ProtectedError
@@ -6,6 +8,8 @@ from django.views import View
 
 from task_manager.mixins import LoginRequiredMixin
 from task_manager.users import forms
+
+logger = logging.getLogger('django')
 
 
 class UserIndex(View):
@@ -52,10 +56,13 @@ class UserDeleteView(LoginRequiredMixin, View):
         try:
             user.delete()
             messages.success(request, "Пользователь успешно удален")
-        except ProtectedError:
+        except ProtectedError as e:
             messages.error(
                 request,
                 "Невозможно удалить пользователя, потому что он используется"
+            )
+            logger.error(
+                f"Failed to delete user. User ID: {user_id}. Error: {e}"
             )
 
         return redirect("users_index")

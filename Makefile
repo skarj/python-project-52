@@ -22,7 +22,7 @@ collectstatic:
 
 .PHONY: lint
 lint:
-	uv run ruff check task_manager
+	uv run ruff check task_manager --fix
 
 .PHONY: build
 build:
