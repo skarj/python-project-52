@@ -60,6 +60,12 @@ class UserCreateForm(UserCreationForm):
             "password2"
         )
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():  # noqa E501
+            raise forms.ValidationError("Пользователь с таким именем уже существует.")  # noqa E501
+        return username
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         is_bound = self.is_bound
