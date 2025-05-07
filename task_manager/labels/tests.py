@@ -14,35 +14,50 @@ class TestLabels(TestCase):
             last_name="Black",
             username="jblack",
         )
-
         self.user.set_password(self.password)
         self.user.save()
-
         self.client.login(username=self.user.username, password=self.password)
 
-    def test_create_update_delete_label(self):
+
+    def test_create_label(self):
         create_data = {
-            "name": "WIP",
+            "name": "WiP",
         }
+
+        response = self.client.post(reverse("labels_create"), data=create_data)
+        self.assertEqual(response.status_code, 302)
+
+        label = Label.objects.get(name=create_data["name"])
+        self.assertEqual(label.name, create_data["name"])
+
+
+    def test_update_label(self):
+        label = Label.objects.create(
+            name='P1'
+        )
 
         update_data = {
-            "name": "Iteration 1",
+            "name": "P2",
         }
 
-        self.client.post(reverse("labels_create"), data=create_data)
+        response = self.client.post(
+            reverse("labels_update", kwargs={"id": label.id}),
+            data=update_data,
+        )
+        self.assertEqual(response.status_code, 302)
 
-        status = Label.objects.get(name=create_data["name"])
-        self.assertEqual(status.name, create_data["name"])
+        label.refresh_from_db()
+        self.assertEqual(label.name, "P2")
 
-        self.client.post(
-            reverse("labels_update", kwargs={"id": status.id}), data=update_data
+
+    def test_delete_label(self):
+        label = Label.objects.create(
+            name='P0'
         )
 
-        status.refresh_from_db()
-        self.assertEqual(status.name, update_data["name"])
-
-        self.client.post(
-            reverse("labels_delete", kwargs={"id": status.id}),
+        response = self.client.post(
+            reverse("labels_delete", kwargs={"id": label.id})
         )
+        self.assertEqual(response.status_code, 302)
 
-        self.assertFalse(Label.objects.filter(pk=status.id).exists())
+        self.assertFalse(Label.objects.filter(pk=label.id).exists())

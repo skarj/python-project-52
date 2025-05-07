@@ -4,9 +4,9 @@ from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.db.models import ProtectedError
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views import View
+from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from task_manager.mixins import LoginRequiredMixin
@@ -15,10 +15,9 @@ from task_manager.users import forms
 logger = logging.getLogger('django')
 
 
-class UserIndex(View):
-    def get(self, request, *args, **kwargs):
-        users = User.objects.all()
-        return render(request, "users/index.html", {"users": users})
+class UserIndex(ListView):
+    model = User
+    template_name = "users/index.html"
 
 
 class UserCreateView(CreateView):
