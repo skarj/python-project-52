@@ -1,17 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
-from django.shortcuts import render
-from django.views import View
+from django.views.generic import TemplateView
 
 from task_manager.forms import LoginForm
 from task_manager.mixins import LoginRequiredMixin
 
 
-class IndexView(View):
-    def get(self, request, *args, **kwargs):
-
-        return render(request, "index.html")
-
+class IndexView(TemplateView):
+    template_name = "index.html"
 
 class LoginView(auth_views.LoginView):
     form_class = LoginForm
