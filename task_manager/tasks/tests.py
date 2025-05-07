@@ -17,9 +17,17 @@ class TestTasks(TestCase):
         )
         self.user.set_password(self.password)
         self.user.save()
+
+        self.user2 = User.objects.create(
+            first_name="jdaniel",
+            last_name="Jack",
+            username="Daniel",
+        )
+        self.user2.set_password(self.password)
+        self.user2.save()
         self.client.login(username=self.user.username, password=self.password)
 
-    def test_create_status(self):
+    def test_create_tasks(self):
         status = Status.objects.create(
             name='Not Started'
         )
@@ -39,7 +47,7 @@ class TestTasks(TestCase):
         task = Task.objects.get(name=create_data["name"])
         self.assertEqual(task.name, create_data["name"])
 
-    def test_update_status(self):
+    def test_update_tasks(self):
         status = Status.objects.create(
             name='New'
         )
@@ -56,7 +64,7 @@ class TestTasks(TestCase):
             "status": status.id,
         }
 
-        response = self.client.post(
+        self.client.post(
             reverse("tasks_create"),
             data=create_data
         )
@@ -72,7 +80,7 @@ class TestTasks(TestCase):
         self.assertEqual(task.name, update_data["name"])
         self.assertEqual(task.description, update_data["description"])
 
-    def test_delete_status(self):
+    def test_delete_tasks(self):
         status = Status.objects.create(
             name='In Discovery'
         )
@@ -82,7 +90,8 @@ class TestTasks(TestCase):
             "description": "Description",
             "status": status.id,
         }
-        response = self.client.post(
+
+        self.client.post(
             reverse("tasks_create"),
             data=create_data
         )
@@ -94,3 +103,31 @@ class TestTasks(TestCase):
         self.assertEqual(response.status_code, 302)
 
         self.assertFalse(Task.objects.filter(pk=task.id).exists())
+
+    def test_delete_not_owned_tasks(self):
+        status = Status.objects.create(
+            name='Blocked'
+        )
+
+        create_data = {
+            "name": "Task4",
+            "description": "Description",
+            "status": status.id,
+        }
+
+        self.client.post(
+            reverse("tasks_create"),
+            data=create_data
+        )
+
+        self.client.logout()
+        self.client.login(username=self.user2.username, password=self.password)
+
+        task = Task.objects.get(name=create_data["name"])
+
+        response = self.client.post(
+            reverse("tasks_delete", kwargs={"id": task.id})
+        )
+        self.assertEqual(response.status_code, 302)
+
+        self.assertTrue(Task.objects.filter(pk=task.id).exists())

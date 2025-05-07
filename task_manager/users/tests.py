@@ -14,6 +14,15 @@ class TestUsers(TestCase):
         )
         self.user.set_password(self.password)
         self.user.save()
+
+        self.user2 = User.objects.create(
+            first_name="jdaniel",
+            last_name="Jack",
+            username="Daniel",
+        )
+        self.user2.set_password(self.password)
+        self.user2.save()
+
         self.client.login(username=self.user.username, password=self.password)
 
     def test_create_user(self):
@@ -59,3 +68,23 @@ class TestUsers(TestCase):
         self.assertEqual(response.status_code, 302)
 
         self.assertFalse(User.objects.filter(pk=self.user.id).exists())
+
+    def test_delete_other_users(self):
+        create_data = {
+            "username": "ddefou",
+            "first_name": "Daniel",
+            "last_name": "Defo",
+            "password1": self.password,
+            "password2": self.password,
+        }
+
+        self.client.post(reverse("users_create"), data=create_data)
+        self.client.logout()
+        self.client.login(username=self.user2.username, password=self.password)
+
+        response = self.client.post(
+            reverse("users_delete", kwargs={"id": self.user.id})
+        )
+        self.assertEqual(response.status_code, 302)
+
+        self.assertTrue(User.objects.filter(pk=self.user.id).exists())
