@@ -2,10 +2,10 @@ import logging
 
 from django.contrib import messages
 from django.db.models import ProtectedError
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
 
 from task_manager.labels.forms import LabelCreateForm
 from task_manager.labels.models import Label
@@ -18,7 +18,6 @@ class LabelIndex(LoginRequiredMixin, ListView):
     model = Label
     template_name = "labels/index.html"
 
-
 class LabelCreateView(CreateView):
     model = Label
     form_class = LabelCreateForm
@@ -29,7 +28,6 @@ class LabelCreateView(CreateView):
         response = super().form_valid(form)
         messages.success(self.request, "Метка успешно создана")
         return response
-
 
 class LabelUpdateView(LoginRequiredMixin, UpdateView):
     model = Label
@@ -44,7 +42,6 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return self.success_url
-
 
 class LabelDeleteView(LoginRequiredMixin, DeleteView):
     model = Label
