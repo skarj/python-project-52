@@ -18,6 +18,7 @@ class StatusIndex(LoginRequiredMixin, ListView):
     model = Status
     template_name = "statuses/index.html"
 
+
 class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
     form_class = StatusCreateForm
@@ -28,6 +29,7 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
         messages.success(self.request, "Статус успешно создан")
         return response
+
 
 class StatusUpdateView(LoginRequiredMixin, UpdateView):
     model = Status

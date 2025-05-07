@@ -1,107 +1,103 @@
 from django.contrib import messages
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from task_manager.mixins import LoginRequiredMixin
 from task_manager.tasks.forms import TaskCreateForm, TaskFilterForm
 from task_manager.tasks.models import Task
 
 
-class TaskIndex(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        tasks = Task.objects.all()
-        filter_form = TaskFilterForm(request.GET)
+class TaskIndex(LoginRequiredMixin, ListView):
+    model = Task
+    template_name = "tasks/index.html"
+    context_object_name = "tasks"
 
-        if filter_form.is_valid():
-            status = filter_form.cleaned_data.get("status")
-            executor = filter_form.cleaned_data.get("executor")
-            label = filter_form.cleaned_data.get("label")
-            created_by_me = filter_form.cleaned_data.get("created_by_me")
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        self.filter_form = TaskFilterForm(self.request.GET)
+
+        if self.filter_form.is_valid():
+            status = self.filter_form.cleaned_data.get("status")
+            executor = self.filter_form.cleaned_data.get("executor")
+            label = self.filter_form.cleaned_data.get("label")
+            created_by_me = self.filter_form.cleaned_data.get("created_by_me")
 
             if status:
-                tasks = tasks.filter(status=status)
+                queryset = queryset.filter(status=status)
             if executor:
-                tasks = tasks.filter(executor=executor)
+                queryset = queryset.filter(executor=executor)
             if label:
-                tasks = tasks.filter(labels__name=label)
+                queryset = queryset.filter(labels__name=label)
             if created_by_me:
-                tasks = tasks.filter(author=request.user.id)
+                queryset = queryset.filter(author=self.request.user)
 
-        return render(
-            request, "tasks/index.html", {"tasks": tasks, "form": filter_form}
-        )
+        return queryset
 
-
-class TaskCreateView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        form = TaskCreateForm()
-
-        return render(request, "tasks/create.html", {"form": form})
-
-    def post(self, request, *args, **kwargs):
-        form = TaskCreateForm(request.POST)
-
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.author = request.user
-            task.save()
-            form.save_m2m()
-
-            messages.success(request, "Задача успешно создана")
-            return redirect("tasks_index")
-
-        return render(request, "tasks/create.html", {"form": form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.filter_form
+        return context
 
 
-class TaskDeleteView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        task_id = kwargs.get("id")
-        task = get_object_or_404(Task, id=task_id)
+class TaskCreateView(LoginRequiredMixin, CreateView):
+    model = Task
+    form_class = TaskCreateForm
+    template_name = "tasks/create.html"
+    success_url = reverse_lazy("tasks_index")
 
-        if request.user.id != task.author.id:
-            messages.error(request, "Задачу может удалить только ее автор")
+    def form_valid(self, form):
+        task = form.save(commit=False)
+        task.author = self.request.user
+        task.save()
+        form.save_m2m()
+        messages.success(self.request, "Задача успешно создана")
+        return redirect(self.success_url)
 
-            return redirect("tasks_index")
 
-        return render(request, "tasks/delete.html", {"task": task})
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = Task
+    form_class = TaskCreateForm
+    template_name = "tasks/update.html"
+    pk_url_kwarg = "id"
+    success_url = reverse_lazy("tasks_index")
 
-    def post(self, request, *args, **kwargs):
-        task_id = kwargs.get("id")
-        task = get_object_or_404(Task, id=task_id)
-        task.delete()
-        messages.success(request, "Задача успешно удалена")
+    def form_valid(self, form):
+        messages.success(self.request, "Задача успешно изменена")
+        return super().form_valid(form)
 
+
+class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Task
+    template_name = "tasks/delete.html"
+    pk_url_kwarg = "id"
+    success_url = reverse_lazy("tasks_index")
+
+    def test_func(self):
+        task = self.get_object()
+        return self.request.user == task.author
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Задачу может удалить только ее автор")
         return redirect("tasks_index")
 
-
-class TaskUpdateView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        task_id = kwargs.get("id")
-        task = get_object_or_404(Task, id=task_id)
-        form = TaskCreateForm(instance=task)
-
-        return render(request, "tasks/update.html", {"form": form})
-
     def post(self, request, *args, **kwargs):
-        task_id = kwargs.get("id")
-        task = get_object_or_404(Task, id=task_id)
-        form = TaskCreateForm(request.POST, instance=task)
+        response = super().post(request, *args, **kwargs)
+        messages.success(request, "Задача успешно удалена")
 
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Задача успешно изменена")
-
-            return redirect("tasks_index")
-
-        return render(request, "tasks/update.html", {"form": form})
+        return response
 
 
-class TaskShowView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        task_id = kwargs.get("id")
-        task = get_object_or_404(Task, id=task_id)
-        labels = task.labels.all()
+class TaskShowView(LoginRequiredMixin, DetailView):
+    model = Task
+    template_name = "tasks/show.html"
+    context_object_name = "task"
+    pk_url_kwarg = "id"
 
-        return render(request, "tasks/show.html", {
-            "task": task, "labels": labels
-        })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["labels"] = self.object.labels.all()
+        return context

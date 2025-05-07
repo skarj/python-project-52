@@ -18,6 +18,7 @@ class LabelIndex(LoginRequiredMixin, ListView):
     model = Label
     template_name = "labels/index.html"
 
+
 class LabelCreateView(CreateView):
     model = Label
     form_class = LabelCreateForm
@@ -28,6 +29,7 @@ class LabelCreateView(CreateView):
         response = super().form_valid(form)
         messages.success(self.request, "Метка успешно создана")
         return response
+
 
 class LabelUpdateView(LoginRequiredMixin, UpdateView):
     model = Label
@@ -42,6 +44,7 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return self.success_url
+
 
 class LabelDeleteView(LoginRequiredMixin, DeleteView):
     model = Label
