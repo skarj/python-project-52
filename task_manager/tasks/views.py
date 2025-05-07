@@ -2,44 +2,25 @@ from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django_filters.views import FilterView
 
 from task_manager.mixins import LoginRequiredMixin
-from task_manager.tasks.forms import TaskCreateForm, TaskFilterForm
+from task_manager.tasks.filters import TaskFilter
+from task_manager.tasks.forms import TaskCreateForm
 from task_manager.tasks.models import Task
 
 
-class TaskIndex(LoginRequiredMixin, ListView):
+class TaskIndex(LoginRequiredMixin, FilterView):
     model = Task
     template_name = "tasks/index.html"
     context_object_name = "tasks"
-
-    def get_queryset(self):
-        queryset = Task.objects.all()
-        self.filter_form = TaskFilterForm(self.request.GET)
-
-        if self.filter_form.is_valid():
-            status = self.filter_form.cleaned_data.get("status")
-            executor = self.filter_form.cleaned_data.get("executor")
-            label = self.filter_form.cleaned_data.get("label")
-            created_by_me = self.filter_form.cleaned_data.get("created_by_me")
-
-            if status:
-                queryset = queryset.filter(status=status)
-            if executor:
-                queryset = queryset.filter(executor=executor)
-            if label:
-                queryset = queryset.filter(labels__name=label)
-            if created_by_me:
-                queryset = queryset.filter(author=self.request.user)
-
-        return queryset
+    filterset_class = TaskFilter
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = self.filter_form
+        context["form"] = context["filter"].form
         return context
 
 

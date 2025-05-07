@@ -1,9 +1,14 @@
 from django import forms
-from django.contrib.auth.models import User
 
 from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
+from task_manager.users.models import User
+
+
+class UserModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.full_name
 
 
 class TaskCreateForm(forms.ModelForm):
@@ -32,7 +37,7 @@ class TaskCreateForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "form-control"}),
     )
 
-    executor = forms.ModelChoiceField(
+    executor = UserModelChoiceField(
         queryset=User.objects.all(),
         required=False,
         label="Исполнитель",
@@ -61,50 +66,3 @@ class TaskCreateForm(forms.ModelForm):
                     field.widget.attrs["class"] += " is-invalid"
                 else:
                     field.widget.attrs["class"] += " is-valid"
-
-        # Custom labels for User dropdown
-        self.fields["executor"].label_from_instance = (
-            lambda obj: f"{obj.first_name} {obj.last_name}"
-        )
-
-
-class TaskFilterForm(forms.ModelForm):
-    status = forms.ModelChoiceField(
-        queryset=Status.objects.all(),
-        required=False,
-        label="Статус",
-        widget=forms.Select(attrs={"class": "form-select ml-2 mr-3"}),
-    )
-
-    executor = forms.ModelChoiceField(
-        queryset=User.objects.all(),
-        required=False,
-        label="Исполнитель",
-        widget=forms.Select(attrs={"class": "form-select ml-2 mr-3"}),
-    )
-
-    label = forms.ModelChoiceField(
-        queryset=Label.objects.all(),
-        required=False,
-        label="Метка",
-        widget=forms.Select(attrs={"class": "form-select ml-2 mr-3"}),
-    )
-
-    created_by_me = forms.BooleanField(
-        required=False,
-        label="Только свои задачи",
-        widget=forms.CheckboxInput(attrs={"class": "form-check-input mr-3"}),
-        initial=False,
-    )
-
-    class Meta:
-        model = Task
-        fields = ("status", "executor")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Custom labels for User dropdown
-        self.fields["executor"].label_from_instance = (
-            lambda obj: f"{obj.first_name} {obj.last_name}"
-        )

@@ -2,7 +2,6 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.models import User
 from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -11,6 +10,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from task_manager.mixins import LoginRequiredMixin
 from task_manager.users import forms
+from task_manager.users.models import User
 
 logger = logging.getLogger('django')
 
