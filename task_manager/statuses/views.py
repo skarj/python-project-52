@@ -1,75 +1,64 @@
+import logging
+
 from django.contrib import messages
 from django.db.models import ProtectedError
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from task_manager.mixins import LoginRequiredMixin
 from task_manager.statuses.forms import StatusCreateForm
 from task_manager.statuses.models import Status
 
-
-class StatusIndex(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        statuses = Status.objects.all()
-        return render(request, "statuses/index.html", {"statuses": statuses})
+logger = logging.getLogger('django')
 
 
-class StatusCreateView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        form = StatusCreateForm()
+class StatusIndex(LoginRequiredMixin, ListView):
+    model = Status
+    template_name = "statuses/index.html"
 
-        return render(request, "statuses/create.html", {"form": form})
+class StatusCreateView(LoginRequiredMixin, CreateView):
+    model = Status
+    form_class = StatusCreateForm
+    template_name = "statuses/create.html"
+    success_url = reverse_lazy("statuses_index")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Статус успешно создан")
+        return response
+
+class StatusUpdateView(LoginRequiredMixin, UpdateView):
+    model = Status
+    form_class = StatusCreateForm
+    template_name = "statuses/update.html"
+    pk_url_kwarg = "id"
+    success_url = reverse_lazy("statuses_index")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Статус успешно изменен")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.success_url
+
+
+class StatusDeleteView(LoginRequiredMixin, DeleteView):
+    model = Status
+    template_name = "statuses/delete.html"
+    pk_url_kwarg = "id"
+    success_url = reverse_lazy("statuses_index")
 
     def post(self, request, *args, **kwargs):
-        form = StatusCreateForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Статус успешно создан")
-            return redirect("statuses_index")
-
-        return render(request, "statuses/create.html", {"form": form})
-
-
-class StatusDeleteView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        status_id = kwargs.get("id")
-        status = get_object_or_404(Status, id=status_id)
-
-        return render(request, "statuses/delete.html", {"status": status})
-
-    def post(self, request, *args, **kwargs):
-        status_id = kwargs.get("id")
-        status = get_object_or_404(Status, id=status_id)
-
         try:
-            status.delete()
+            response = super().post(request, *args, **kwargs)
             messages.success(request, "Статус успешно удален")
-        except ProtectedError:
+
+            return response
+        except ProtectedError as e:
             messages.error(
                 request, "Невозможно удалить статус, потому что он используется"
             )
-
-        return redirect("statuses_index")
-
-
-class StatusUpdateView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        status_id = kwargs.get("id")
-        status = get_object_or_404(Status, id=status_id)
-        form = StatusCreateForm(instance=status)
-
-        return render(request, "statuses/update.html", {"form": form})
-
-    def post(self, request, *args, **kwargs):
-        status_id = kwargs.get("id")
-        status = get_object_or_404(Status, id=status_id)
-        form = StatusCreateForm(request.POST, instance=status)
-
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Статус успешно изменен")
-
-            return redirect("statuses_index")
-
-        return render(request, "statuses/update.html", {"form": form})
+            logger.error(f"ProtectedError when deleting status {self.object.id}: {e}")  # noqa: E501
+            return HttpResponseRedirect(self.success_url)

@@ -18,7 +18,6 @@ class TestLabels(TestCase):
         self.user.save()
         self.client.login(username=self.user.username, password=self.password)
 
-
     def test_create_label(self):
         create_data = {
             "name": "WiP",
@@ -29,7 +28,6 @@ class TestLabels(TestCase):
 
         label = Label.objects.get(name=create_data["name"])
         self.assertEqual(label.name, create_data["name"])
-
 
     def test_update_label(self):
         label = Label.objects.create(
@@ -47,8 +45,7 @@ class TestLabels(TestCase):
         self.assertEqual(response.status_code, 302)
 
         label.refresh_from_db()
-        self.assertEqual(label.name, "P2")
-
+        self.assertEqual(label.name, update_data["name"])
 
     def test_delete_label(self):
         label = Label.objects.create(

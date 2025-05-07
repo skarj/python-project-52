@@ -14,36 +14,50 @@ class TestStatuses(TestCase):
             last_name="Black",
             username="jblack",
         )
-
         self.user.set_password(self.password)
         self.user.save()
-
         self.client.login(username=self.user.username, password=self.password)
 
-    def test_create_update_delete_status(self):
+    def test_create_status(self):
         create_data = {
             "name": "In Progress",
         }
+
+        response = self.client.post(
+            reverse("statuses_create"),
+            data=create_data
+        )
+        self.assertEqual(response.status_code, 302)
+
+        status = Status.objects.get(name=create_data["name"])
+        self.assertEqual(status.name, create_data["name"])
+
+    def test_update_status(self):
+        status = Status.objects.create(
+            name='Closed'
+        )
 
         update_data = {
             "name": "Resolved",
         }
 
-        self.client.post(reverse("statuses_create"), data=create_data)
-
-        status = Status.objects.get(name=create_data["name"])
-        self.assertEqual(status.name, create_data["name"])
-
-        self.client.post(
+        response = self.client.post(
             reverse("statuses_update", kwargs={"id": status.id}),
-            data=update_data
+            data=update_data,
         )
+        self.assertEqual(response.status_code, 302)
 
         status.refresh_from_db()
         self.assertEqual(status.name, update_data["name"])
 
-        self.client.post(
-            reverse("statuses_delete", kwargs={"id": status.id}),
+    def test_delete_status(self):
+        status = Status.objects.create(
+            name='In Descovery'
         )
+
+        response = self.client.post(
+            reverse("statuses_delete", kwargs={"id": status.id})
+        )
+        self.assertEqual(response.status_code, 302)
 
         self.assertFalse(Status.objects.filter(pk=status.id).exists())
