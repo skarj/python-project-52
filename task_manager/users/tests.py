@@ -14,7 +14,7 @@ class TestUsers(TestCase):
         )
         self.user.set_password(self.password)
         self.user.save()
-        self.client.login(username="jblack", password=self.password)
+        self.client.login(username=self.user.username, password=self.password)
 
     def test_create_user(self):
         create_data = {
@@ -28,9 +28,9 @@ class TestUsers(TestCase):
         response = self.client.post(reverse("users_create"), data=create_data)
         self.assertEqual(response.status_code, 302)
 
-        user = User.objects.get(username="ddefo")
-        self.assertEqual(user.first_name, "Daniel")
-        self.assertEqual(user.last_name, "Defo")
+        user = User.objects.get(username=create_data["username"])
+        self.assertEqual(user.first_name, create_data["first_name"])
+        self.assertEqual(user.last_name, create_data["last_name"])
 
     def test_update_user(self):
         update_data = {
@@ -48,9 +48,9 @@ class TestUsers(TestCase):
         self.assertEqual(response.status_code, 302)
 
         self.user.refresh_from_db()
-        self.assertEqual(self.user.username, "jdaniel")
-        self.assertEqual(self.user.first_name, "Jack")
-        self.assertEqual(self.user.last_name, "Daniel")
+        self.assertEqual(self.user.username, update_data["username"])
+        self.assertEqual(self.user.first_name, update_data["first_name"])
+        self.assertEqual(self.user.last_name, update_data["last_name"])
 
     def test_delete_user(self):
         response = self.client.post(

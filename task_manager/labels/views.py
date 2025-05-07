@@ -2,9 +2,10 @@ import logging
 
 from django.contrib import messages
 from django.db.models import ProtectedError
-from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 from task_manager.labels.forms import LabelCreateForm
 from task_manager.labels.models import Label
@@ -62,4 +63,4 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
                 request, "Невозможно удалить метку, потому что она используется"
             )
             logger.error(f"ProtectedError when deleting label {self.object.id}: {e}")  # noqa: E501
-            return self.get(request, *args, **kwargs)
+            return HttpResponseRedirect(self.success_url)
