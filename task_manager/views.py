@@ -9,6 +9,7 @@ from task_manager.mixins import LoginRequiredMixin
 class IndexView(TemplateView):
     template_name = "index.html"
 
+
 class LoginView(auth_views.LoginView):
     form_class = LoginForm
     template_name = 'login.html'
