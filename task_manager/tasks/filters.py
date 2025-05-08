@@ -1,6 +1,5 @@
 from django import forms
 from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
-from task_manager.users.models import User
 
 from .models import Task
 

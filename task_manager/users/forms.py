@@ -15,6 +15,7 @@ class UserCreateForm(UserCreationForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
+
         # TODO ?
         if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():  # noqa E501
             raise forms.ValidationError("Пользователь с таким именем уже существует.")  # noqa E501

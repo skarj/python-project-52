@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load django_bootstrap5 %}
 {% block title %}Статусы{% endblock %}
 {% block content %}
 <a class="btn btn-primary mb-3" href="{% url 'statuses_create' %}">Создать статус</a>
