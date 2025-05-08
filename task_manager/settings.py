@@ -20,7 +20,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+PROJECT_DIR = BASE_DIR / 'task_manager'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -117,15 +117,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 TIME_ZONE = "UTC"
-
+USE_TZ = True
 USE_I18N = True
 LANGUAGE_CODE = "ru"
 LANGUAGES = [
     ("en", "English"),
     ("ru", "Russian"),
 ]
-
-USE_TZ = True
+LOCALE_PATHS = [PROJECT_DIR / 'locale']
 
 
 # Static files (CSS, JavaScript, Images)

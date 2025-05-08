@@ -1,12 +1,12 @@
 import logging
 
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.contrib.messages.views import SuccessMessageMixin
 
 from task_manager.labels.forms import LabelCreateForm
 from task_manager.labels.models import Label
