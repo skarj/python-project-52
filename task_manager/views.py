@@ -1,26 +1,22 @@
 from django.contrib import messages
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import TemplateView
-
-from task_manager.forms import LoginForm
-from task_manager.mixins import LoginRequiredMixin
 
 
 class IndexView(TemplateView):
     template_name = "index.html"
 
 
-class LoginView(auth_views.LoginView):
-    form_class = LoginForm
-    template_name = 'login.html'
+class LoginView(SuccessMessageMixin, LoginView):
+    form_class = AuthenticationForm
+    template_name = "login.html"
     next_page = "index"
-
-    def form_valid(self, form):
-        messages.success(self.request, "Вы залогинены")
-        return super().form_valid(form)
+    success_message = "Вы залогинены"
 
 
-class LogoutView(LoginRequiredMixin, auth_views.LogoutView):
+class LogoutView(LogoutView):
     next_page = "index"
 
     def dispatch(self, request, *args, **kwargs):

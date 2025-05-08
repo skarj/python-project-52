@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from task_manager.labels.forms import LabelCreateForm
 from task_manager.labels.models import Label
@@ -19,31 +20,21 @@ class LabelIndex(LoginRequiredMixin, ListView):
     template_name = "labels/index.html"
 
 
-class LabelCreateView(CreateView):
+class LabelCreateView(SuccessMessageMixin, CreateView):
     model = Label
     form_class = LabelCreateForm
     template_name = "labels/create.html"
     success_url = reverse_lazy("labels_index")
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Метка успешно создана")
-        return response
+    success_message = "Метка успешно создана"
 
 
-class LabelUpdateView(LoginRequiredMixin, UpdateView):
+class LabelUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = Label
     form_class = LabelCreateForm
     template_name = "labels/update.html"
     pk_url_kwarg = "id"
     success_url = reverse_lazy("labels_index")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Метка успешно изменена")
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return self.success_url
+    success_message = "Метка успешно изменена"
 
 
 class LabelDeleteView(LoginRequiredMixin, DeleteView):

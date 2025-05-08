@@ -3,6 +3,7 @@ from django.db import models
 
 class Label(models.Model):
     name = models.CharField(
+        "Имя",
         max_length=255,
         unique=True
     )

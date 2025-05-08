@@ -7,11 +7,13 @@ from task_manager.users.models import User
 
 class Task(models.Model):
     name = models.CharField(
+        "Имя",
         max_length=255,
         unique=True
     )
 
     description = models.TextField(
+        "Описание",
         max_length=255
     )
 
@@ -23,6 +25,7 @@ class Task(models.Model):
 
     executor = models.ForeignKey(
         User,
+        verbose_name="Исполнитель",
         related_name="assigned_tasks",
         on_delete=models.PROTECT,
         null=True,
@@ -31,11 +34,13 @@ class Task(models.Model):
 
     status = models.ForeignKey(
         Status,
+        verbose_name="Статус",
         on_delete=models.PROTECT
     )
 
     labels = models.ManyToManyField(
         Label,
+        verbose_name="Метки",
         through="LabelTask",
         blank=True
     )

@@ -2,6 +2,7 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -20,24 +21,22 @@ class UserIndex(ListView):
     template_name = "users/index.html"
 
 
-class UserCreateView(CreateView):
+class UserCreateView(SuccessMessageMixin, CreateView):
     model = User
     form_class = forms.UserCreateForm
     template_name = "users/create.html"
     success_url = reverse_lazy("login")
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Пользователь успешно зарегистрирован")
-        return response
+    success_message = "Пользователь успешно зарегистрирован"
 
 
-class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class UserUpdateView(SuccessMessageMixin, LoginRequiredMixin,
+                     UserPassesTestMixin, UpdateView):
     model = User
     form_class = forms.UserCreateForm
     template_name = "users/update.html"
     pk_url_kwarg = "id"
     success_url = reverse_lazy("users_index")
+    success_message = "Пользователь успешно изменен"
 
     def test_func(self):
         return self.request.user.id == self.kwargs.get("id")
@@ -47,10 +46,6 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             self.request, "У вас нет прав для изменения другого пользователя."
         )
         return redirect("users_index")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Пользователь успешно изменен")
-        return super().form_valid(form)
 
     def get_success_url(self):
         return self.success_url
