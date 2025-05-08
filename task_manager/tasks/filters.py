@@ -1,21 +1,8 @@
 from django import forms
 from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
+from task_manager.users.models import User
 
 from .models import Task
-
-
-# TODO: other way to show full_name
-class LabeledModelChoiceFilter(ModelChoiceFilter):
-    def __init__(self, *args, **kwargs):
-        self.label_from_instance = kwargs.pop('label_from_instance', None)
-        super().__init__(*args, **kwargs)
-
-    @property
-    def field(self):
-        field = super().field
-        if self.label_from_instance:
-            field.label_from_instance = self.label_from_instance
-        return field
 
 
 class TaskFilter(FilterSet):
@@ -24,10 +11,9 @@ class TaskFilter(FilterSet):
         label="Статус",
     )
 
-    executor = LabeledModelChoiceFilter(
+    executor = ModelChoiceFilter(
         queryset=Task.executor.field.related_model.objects.all(),
         label="Исполнитель",
-        label_from_instance=lambda obj: obj.full_name
     )
 
     labels = ModelChoiceFilter(

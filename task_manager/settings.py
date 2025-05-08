@@ -38,6 +38,7 @@ else:
         "127.0.0.1"
     ]
 
+AUTH_USER_MODEL = 'users.User'
 
 # Application definition
 

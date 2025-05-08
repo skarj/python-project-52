@@ -1,10 +1,6 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 
-class User(User):
-    class Meta:
-        proxy = True
-
-    @property
-    def full_name(self):
-        return f"{self.first_name} {self.last_name}".strip()
+class User(AbstractUser):
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'

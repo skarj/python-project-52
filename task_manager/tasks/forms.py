@@ -1,16 +1,12 @@
-from django import forms
+from django.forms import ModelForm
 
 from task_manager.tasks.models import Task
 
 
-class UserModelChoiceField(forms.ModelChoiceField):
-    def label_from_instance(self, obj):
-        return obj.full_name
-
-
-class TaskCreateForm(forms.ModelForm):
+class TaskCreateForm(ModelForm):
     class Meta:
         model = Task
+
         fields = [
             "name",
             "description",
