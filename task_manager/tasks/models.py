@@ -6,11 +6,21 @@ from task_manager.users.models import User
 
 
 class Task(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    description = models.CharField(max_length=255)
-    author = models.ForeignKey(
-        User, related_name="authored_tasks", on_delete=models.PROTECT
+    name = models.CharField(
+        max_length=255,
+        unique=True
     )
+
+    description = models.TextField(
+        max_length=255
+    )
+
+    author = models.ForeignKey(
+        User,
+        related_name="authored_tasks",
+        on_delete=models.PROTECT
+    )
+
     executor = models.ForeignKey(
         User,
         related_name="assigned_tasks",
@@ -18,10 +28,25 @@ class Task(models.Model):
         null=True,
         blank=True,
     )
-    status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    labels = models.ManyToManyField(Label, through="LabelTask")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    status = models.ForeignKey(
+        Status,
+        on_delete=models.PROTECT
+    )
+
+    labels = models.ManyToManyField(
+        Label,
+        through="LabelTask",
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
 
 
 class LabelTask(models.Model):

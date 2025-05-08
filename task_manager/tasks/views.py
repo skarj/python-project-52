@@ -12,7 +12,7 @@ from task_manager.tasks.forms import TaskCreateForm
 from task_manager.tasks.models import Task
 
 
-class TaskIndex(LoginRequiredMixin, FilterView):
+class TaskIndexView(LoginRequiredMixin, FilterView):
     model = Task
     template_name = "tasks/index.html"
     context_object_name = "tasks"

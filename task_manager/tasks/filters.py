@@ -1,10 +1,11 @@
-import django_filters
 from django import forms
+from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
 
 from .models import Task
 
 
-class LabeledModelChoiceFilter(django_filters.ModelChoiceFilter):
+# TODO: other way to show full_name
+class LabeledModelChoiceFilter(ModelChoiceFilter):
     def __init__(self, *args, **kwargs):
         self.label_from_instance = kwargs.pop('label_from_instance', None)
         super().__init__(*args, **kwargs)
@@ -17,31 +18,27 @@ class LabeledModelChoiceFilter(django_filters.ModelChoiceFilter):
         return field
 
 
-class TaskFilter(django_filters.FilterSet):
-    status = django_filters.ModelChoiceFilter(
+class TaskFilter(FilterSet):
+    status = ModelChoiceFilter(
         queryset=Task.status.field.related_model.objects.all(),
-        required=False,
         label="Статус",
-        widget=forms.Select(attrs={"class": "form-select ml-2 mr-3"})
     )
+
     executor = LabeledModelChoiceFilter(
         queryset=Task.executor.field.related_model.objects.all(),
-        required=False,
         label="Исполнитель",
-        widget=forms.Select(attrs={"class": "form-select ml-2 mr-3"}),
         label_from_instance=lambda obj: obj.full_name
     )
-    labels = django_filters.ModelChoiceFilter(
+
+    labels = ModelChoiceFilter(
         queryset=Task.labels.field.related_model.objects.all(),
-        required=False,
         label="Метка",
-        widget=forms.Select(attrs={"class": "form-select ml-2 mr-3"})
     )
-    created_by_me = django_filters.BooleanFilter(
-        required=False,
+
+    created_by_me = BooleanFilter(
         method='filter_created_by_me',
         label='Только свои задачи',
-        widget=forms.CheckboxInput(attrs={"class": "form-check-input mr-3"}),
+        widget=forms.CheckboxInput(),
         initial=False,
     )
 
