@@ -120,7 +120,6 @@ USE_TZ = True
 USE_I18N = True
 LANGUAGE_CODE = "ru"
 LANGUAGES = [
-    ("en", "English"),
     ("ru", "Russian"),
 ]
 LOCALE_PATHS = [

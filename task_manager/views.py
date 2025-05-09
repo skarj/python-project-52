@@ -15,7 +15,6 @@ class LoginView(SuccessMessageMixin, LoginView):
     next_page = "index"
     success_message = "Вы залогинены"
 
-
 class LogoutView(LogoutView):
     next_page = "index"
 
