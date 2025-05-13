@@ -1,22 +1,24 @@
 from django import forms
 from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
 
-from .models import Task
+from task_manager.labels.models import Label
+from task_manager.statuses.models import Status
+from task_manager.tasks.models import Task
 
 
 class TaskFilter(FilterSet):
     status = ModelChoiceFilter(
-        queryset=Task.status.field.related_model.objects.all(),
+        queryset=Status.objects.all(),
         label="Статус",
     )
 
     executor = ModelChoiceFilter(
-        queryset=Task.executor.field.related_model.objects.all(),
+        queryset=Task.objects.all(),
         label="Исполнитель",
     )
 
     labels = ModelChoiceFilter(
-        queryset=Task.labels.field.related_model.objects.all(),
+        queryset=Label.objects.all(),
         label="Метка",
     )
 
