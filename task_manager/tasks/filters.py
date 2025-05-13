@@ -4,6 +4,7 @@ from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
 from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
+from task_manager.users.models import User
 
 
 class TaskFilter(FilterSet):
@@ -13,7 +14,7 @@ class TaskFilter(FilterSet):
     )
 
     executor = ModelChoiceFilter(
-        queryset=Task.objects.all(),
+        queryset=User.objects.all(),
         label="Исполнитель",
     )
 
