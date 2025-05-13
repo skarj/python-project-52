@@ -12,7 +12,7 @@ from task_manager.mixins import LoginRequiredMixin
 from task_manager.statuses.forms import StatusCreateForm
 from task_manager.statuses.models import Status
 
-logger = logging.getLogger('django')
+logger = logging.getLogger(__name__)
 
 
 class StatusIndex(LoginRequiredMixin, ListView):

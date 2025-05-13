@@ -13,7 +13,7 @@ from task_manager.mixins import LoginRequiredMixin
 from task_manager.users import forms
 from task_manager.users.models import User
 
-logger = logging.getLogger('django')
+logger = logging.getLogger(__name__)
 
 
 class UserIndex(ListView):

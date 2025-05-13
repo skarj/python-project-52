@@ -12,7 +12,7 @@ from task_manager.labels.forms import LabelCreateForm
 from task_manager.labels.models import Label
 from task_manager.mixins import LoginRequiredMixin
 
-logger = logging.getLogger('django')
+logger = logging.getLogger(__name__)
 
 
 class LabelIndex(LoginRequiredMixin, ListView):
