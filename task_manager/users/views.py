@@ -1,15 +1,13 @@
 import logging
 
 from django.contrib import messages
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from task_manager.mixins import LoginRequiredMixin
+from task_manager.mixins import LoginRequiredMixin, UserModificationMixin
 from task_manager.users import forms
 from task_manager.users.models import User
 
@@ -30,42 +28,18 @@ class UserCreateView(SuccessMessageMixin, CreateView):
 
 
 class UserUpdateView(SuccessMessageMixin, LoginRequiredMixin,
-                     UserPassesTestMixin, UpdateView):
-    model = User
-    form_class = forms.UserCreateForm
+                     UserModificationMixin, UpdateView):
     template_name = "users/update.html"
+    form_class = forms.UserCreateForm
     pk_url_kwarg = "id"
-    success_url = reverse_lazy("users_index")
     success_message = "Пользователь успешно изменен"
 
-    def test_func(self):
-        return self.request.user.id == self.kwargs.get("id")
 
-    def handle_no_permission(self):
-        messages.error(
-            self.request, "У вас нет прав для изменения другого пользователя."
-        )
-        return redirect("users_index")
-
-    def get_success_url(self):
-        return self.success_url
-
-
-class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = User
+class UserDeleteView(LoginRequiredMixin, UserModificationMixin,
+                     DeleteView):
     template_name = "users/delete.html"
     pk_url_kwarg = "id"
-    success_url = reverse_lazy("users_index")
-
-    def test_func(self):
-        user = self.get_object()
-        return self.request.user.id == user.id
-
-    def handle_no_permission(self):
-        messages.error(
-            self.request, "У вас нет прав для изменения другого пользователя."
-        )
-        return redirect("users_index")
+    success_message = "Пользователь успешно удален"
 
     def post(self, request, *args, **kwargs):
         try:
