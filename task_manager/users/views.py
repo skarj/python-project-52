@@ -1,13 +1,15 @@
 import logging
 
-from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import ProtectedError
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from task_manager.mixins import LoginRequiredMixin, UserModificationMixin
+from task_manager.mixins import (
+    LoginRequiredMixin,
+    ProtectedDeleteMixin,
+    UserModificationMixin,
+)
 from task_manager.users import forms
 from task_manager.users.models import User
 
@@ -36,20 +38,8 @@ class UserUpdateView(SuccessMessageMixin, LoginRequiredMixin,
 
 
 class UserDeleteView(LoginRequiredMixin, UserModificationMixin,
-                     DeleteView):
+                     ProtectedDeleteMixin, DeleteView):
     template_name = "users/delete.html"
     pk_url_kwarg = "id"
     success_message = "Пользователь успешно удален"
-
-    def post(self, request, *args, **kwargs):
-        try:
-            response = super().post(request, *args, **kwargs)
-            messages.success(request, "Пользователь успешно удален")
-
-            return response
-        except ProtectedError as e:
-            messages.error(
-                request, "Невозможно удалить пользователя, так как он связан с другими объектами."  # noqa E501
-            )
-            logger.error(f"ProtectedError when deleting user {self.object.id}: {e}")  # noqa: E501
-            return self.get(request, *args, **kwargs)
+    protected_error_message = "Невозможно удалить пользователя, так как он связан с другими объектами."  # noqa E501
