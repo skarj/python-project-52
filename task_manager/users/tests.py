@@ -30,7 +30,6 @@ class TestUsers(TestCase):
         create_data = {
             "username": "ddefo",
             "first_name": "Daniel",
-            "last_name": "Defo",
             "password1": self.password,
             "password2": self.password,
         }
@@ -40,7 +39,6 @@ class TestUsers(TestCase):
 
         user = User.objects.get(username=create_data["username"])
         self.assertEqual(user.first_name, create_data["first_name"])
-        self.assertEqual(user.last_name, create_data["last_name"])
 
     def test_update_user(self):
         update_data = {
@@ -70,18 +68,21 @@ class TestUsers(TestCase):
 
         self.assertFalse(User.objects.filter(pk=self.user.id).exists())
 
-    def test_delete_other_users(self):
-        create_data = {
-            "username": "ddefou",
-            "first_name": "Daniel",
-            "last_name": "Defo",
+    def test_delete_edit_other_users(self):
+        update_data = {
+            "username": "jdaniel2",
             "password1": self.password,
             "password2": self.password,
         }
 
-        self.client.post(reverse("users_create"), data=create_data)
         self.client.logout()
         self.client.login(username=self.user2.username, password=self.password)
+
+        self.client.post(
+            reverse("users_update", kwargs={"id": self.user.id}),
+            data=update_data,
+        )
+        self.assertEqual(self.user.username, "jblack")
 
         response = self.client.post(
             reverse("users_delete", kwargs={"id": self.user.id})
