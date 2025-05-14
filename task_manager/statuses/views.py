@@ -1,4 +1,3 @@
-import logging
 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
@@ -8,8 +7,6 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from task_manager.mixins import LoginRequiredMixin, ProtectedDeleteMixin
 from task_manager.statuses.forms import StatusCreateForm
 from task_manager.statuses.models import Status
-
-logger = logging.getLogger(__name__)
 
 
 class StatusIndex(LoginRequiredMixin, ListView):

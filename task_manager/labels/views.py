@@ -1,5 +1,3 @@
-import logging
-
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView
@@ -8,8 +6,6 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from task_manager.labels.forms import LabelCreateForm
 from task_manager.labels.models import Label
 from task_manager.mixins import LoginRequiredMixin, ProtectedDeleteMixin
-
-logger = logging.getLogger(__name__)
 
 
 class LabelIndex(LoginRequiredMixin, ListView):
@@ -25,7 +21,8 @@ class LabelCreateView(SuccessMessageMixin, CreateView):
     success_message = "Метка успешно создана"
 
 
-class LabelUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+class LabelUpdateView(SuccessMessageMixin, LoginRequiredMixin,
+                      UpdateView):
     model = Label
     form_class = LabelCreateForm
     template_name = "labels/update.html"
@@ -34,7 +31,8 @@ class LabelUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     success_message = "Метка успешно изменена"
 
 
-class LabelDeleteView(LoginRequiredMixin, ProtectedDeleteMixin, DeleteView):
+class LabelDeleteView(LoginRequiredMixin, ProtectedDeleteMixin,
+                      DeleteView):
     model = Label
     template_name = "labels/delete.html"
     pk_url_kwarg = "id"
