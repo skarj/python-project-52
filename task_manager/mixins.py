@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import AccessMixin, UserPassesTestMixin
 from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 from task_manager.users.models import User
 
@@ -48,4 +49,4 @@ class ProtectedDeleteMixin:
         except ProtectedError as e:
             messages.error(request, self.protected_error_message)
             logger.error(f"ProtectedError when deleting object {self.get_object().id}: {e}")  # noqa E501
-            return self.get(request, *args, **kwargs)
+            return HttpResponseRedirect(self.success_url)
