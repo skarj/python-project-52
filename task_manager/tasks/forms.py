@@ -18,4 +18,4 @@ class TaskCreateForm(ModelForm):
     # Change label for executor field to full name
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['executor'].label_from_instance = lambda obj: f'{obj.first_name} {obj.last_name}' #  noqa: E501
+        self.fields['executor'].label_from_instance = lambda obj: f'{obj.first_name} {obj.last_name}'  # noqa: E501
