@@ -7,6 +7,7 @@ from task_manager.tasks.models import Task
 from task_manager.users.models import User
 
 
+# Change label for executor field to full name
 class UserModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return f'{obj.first_name} {obj.last_name}'
