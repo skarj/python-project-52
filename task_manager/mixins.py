@@ -3,9 +3,9 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import AccessMixin, UserPassesTestMixin
 from django.db.models import ProtectedError
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
 
 from task_manager.users.models import User
 
