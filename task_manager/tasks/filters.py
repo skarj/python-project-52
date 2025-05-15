@@ -7,13 +7,22 @@ from task_manager.tasks.models import Task
 from task_manager.users.models import User
 
 
+class UserModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f'{obj.first_name} {obj.last_name}'
+
+
+class UserModelChoiceFilter(ModelChoiceFilter):
+    field_class = UserModelChoiceField
+
+
 class TaskFilter(FilterSet):
     status = ModelChoiceFilter(
         queryset=Status.objects.all(),
         label="Статус",
     )
 
-    executor = ModelChoiceFilter(
+    executor = UserModelChoiceFilter(
         queryset=User.objects.all(),
         label="Исполнитель",
     )
