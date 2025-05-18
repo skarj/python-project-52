@@ -3,14 +3,9 @@ from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
 
 from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
+from task_manager.tasks.forms import UserModelChoiceField
 from task_manager.tasks.models import Task
 from task_manager.users.models import User
-
-
-# Change label for executor field to full name
-class UserModelChoiceField(forms.ModelChoiceField):
-    def label_from_instance(self, obj):
-        return f'{obj.first_name} {obj.last_name}'
 
 
 class UserModelChoiceFilter(ModelChoiceFilter):
