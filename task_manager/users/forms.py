@@ -5,8 +5,6 @@ from task_manager.users.models import User
 
 
 class UserCreateForm(UserCreationForm):
-    last_name = forms.CharField(required=True)
-
     class Meta:
         model = User
         fields = (
@@ -14,6 +12,10 @@ class UserCreateForm(UserCreationForm):
             "last_name",
             "username"
         )
+
+    def __init__(self, *args, **kwargs):
+        super(UserCreateForm, self).__init__(*args, **kwargs)
+        self.fields['last_name'].required = True
 
 
 class UserUpdateForm(UserCreateForm):
