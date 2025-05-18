@@ -24,12 +24,13 @@ class TestUsers(TestCase):
         self.user2.set_password(self.password)
         self.user2.save()
 
-        self.client.login(username=self.user.username, password=self.password)
+        self.client.force_login(self.user)
 
     def test_create_user(self):
         create_data = {
             "username": "ddefo",
             "first_name": "Daniel",
+            "last_name": "Defo",
             "password1": self.password,
             "password2": self.password,
         }
@@ -68,21 +69,9 @@ class TestUsers(TestCase):
 
         self.assertFalse(User.objects.filter(pk=self.user.id).exists())
 
-    def test_delete_edit_other_users(self):
-        update_data = {
-            "username": "jdaniel2",
-            "password1": self.password,
-            "password2": self.password,
-        }
-
+    def test_delete_user_denied_to_other_users(self):
         self.client.logout()
-        self.client.login(username=self.user2.username, password=self.password)
-
-        self.client.post(
-            reverse("users_update", kwargs={"id": self.user.id}),
-            data=update_data,
-        )
-        self.assertEqual(self.user.username, "jblack")
+        self.client.force_login(self.user2)
 
         response = self.client.post(
             reverse("users_delete", kwargs={"id": self.user.id})
@@ -90,3 +79,19 @@ class TestUsers(TestCase):
         self.assertEqual(response.status_code, 302)
 
         self.assertTrue(User.objects.filter(pk=self.user.id).exists())
+
+    def test_update_user_denied_to_other_users(self):
+        update_data = {
+            "username": "jdaniel2",
+            "password1": self.password,
+            "password2": self.password,
+        }
+
+        self.client.logout()
+        self.client.force_login(self.user2)
+
+        self.client.post(
+            reverse("users_update", kwargs={"id": self.user.id}),
+            data=update_data,
+        )
+        self.assertEqual(self.user.username, "jblack")
