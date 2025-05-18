@@ -1,9 +1,12 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from task_manager.users.models import User
 
 
 class UserCreateForm(UserCreationForm):
+    last_name = forms.CharField(required=True)
+
     class Meta:
         model = User
         fields = (
