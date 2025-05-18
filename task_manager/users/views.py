@@ -32,7 +32,7 @@ class UserCreateView(SuccessMessageMixin, CreateView):
 class UserUpdateView(SuccessMessageMixin, LoginRequiredMixin,
                      UserModificationMixin, UpdateView):
     template_name = "users/update.html"
-    form_class = forms.UserCreateForm
+    form_class = forms.UserUpdateForm
     pk_url_kwarg = "id"
     success_message = "Пользователь успешно изменен"
 
