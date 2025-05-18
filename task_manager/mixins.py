@@ -35,6 +35,16 @@ class UserModificationMixin(UserPassesTestMixin):
         return redirect('users_index')
 
 
+class TaskDeletekMixin:
+    def test_func(self):
+        task = self.get_object()
+        return self.request.user == task.author
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Задачу может удалить только ее автор")
+        return redirect("tasks_index")
+
+
 class ProtectedDeleteMixin:
     protected_error_message = "Невозможно удалить объект, так как он связан с другими объектами."  # noqa E501
     success_message = "Объект успешно удален"
