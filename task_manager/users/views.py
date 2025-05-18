@@ -26,7 +26,7 @@ class UserCreateView(SuccessMessageMixin, CreateView):
     success_message = "Пользователь успешно зарегистрирован"
 
 
-class UserUpdateView(SuccessMessageMixin, LoginRequiredMixin,
+class UserUpdateView(LoginRequiredMixin,
                      UserModificationMixin, UpdateView):
     template_name = "users/update.html"
     form_class = forms.UserUpdateForm
@@ -34,7 +34,7 @@ class UserUpdateView(SuccessMessageMixin, LoginRequiredMixin,
     success_message = "Пользователь успешно изменен"
 
 
-class UserDeleteView(LoginRequiredMixin, UserModificationMixin,
+class UserDeleteView(UserModificationMixin,
                      ProtectedDeleteMixin, DeleteView):
     template_name = "users/delete.html"
     pk_url_kwarg = "id"
