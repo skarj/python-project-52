@@ -1,26 +1,24 @@
 import logging
 
 from django.contrib import messages
-from django.contrib.auth.mixins import AccessMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 from task_manager.users.models import User
 
 logger = logging.getLogger(__name__)
 
 
-class LoginRequiredMixin(AccessMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            messages.error(
-                request, "Вы не авторизованы! Пожалуйста, выполните вход."
-            )
-            return redirect(self.get_login_url())
-
-        return super().dispatch(request, *args, **kwargs)
+class LoginRequiredMixin(LoginRequiredMixin):
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Вы не авторизованы! Пожалуйста, выполните вход.'
+        )
+        return redirect(reverse('login'))
 
 
 class UserModificationMixin(UserPassesTestMixin):
@@ -48,5 +46,5 @@ class ProtectedDeleteMixin:
             return response
         except ProtectedError as e:
             messages.error(request, self.protected_error_message)
-            logger.error(f"ProtectedError when deleting object {self.get_object().id}: {e}")  # noqa E501
+            logger.exception(f"ProtectedError when deleting object {self.get_object().id}: {e}")  # noqa E501
             return HttpResponseRedirect(self.success_url)
