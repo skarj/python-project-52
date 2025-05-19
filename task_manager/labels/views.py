@@ -31,8 +31,8 @@ class LabelUpdateView(SuccessMessageMixin, LoginRequiredMixin,
     success_message = "Метка успешно изменена"
 
 
-class LabelDeleteView(LoginRequiredMixin, ProtectedDeleteMixin,
-                      DeleteView):
+class LabelDeleteView(SuccessMessageMixin, LoginRequiredMixin,
+                      ProtectedDeleteMixin, DeleteView):
     model = Label
     template_name = "labels/delete.html"
     pk_url_kwarg = "id"

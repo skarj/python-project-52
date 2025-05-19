@@ -33,8 +33,8 @@ class StatusUpdateView(SuccessMessageMixin, LoginRequiredMixin,
     success_message = "Статус успешно изменен"
 
 
-class StatusDeleteView(LoginRequiredMixin, ProtectedDeleteMixin,
-                       DeleteView):
+class StatusDeleteView(SuccessMessageMixin, LoginRequiredMixin,
+                       ProtectedDeleteMixin, DeleteView):
     model = Status
     template_name = "statuses/delete.html"
     pk_url_kwarg = "id"
