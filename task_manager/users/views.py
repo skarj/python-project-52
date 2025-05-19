@@ -37,8 +37,9 @@ class UserUpdateView(SuccessMessageMixin, UserModificationMixin,
     success_message = "Пользователь успешно изменен"
 
 
-class UserDeleteView(UserModificationMixin, LoginRequiredMixin,
-                     ProtectedDeleteMixin, DeleteView):
+class UserDeleteView(SuccessMessageMixin, UserModificationMixin,
+                     LoginRequiredMixin, ProtectedDeleteMixin,
+                     DeleteView):
     template_name = "users/delete.html"
     pk_url_kwarg = "id"
     success_message = "Пользователь успешно удален"

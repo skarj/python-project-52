@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 
+from task_manager.tasks.models import Task
 from task_manager.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ class UserModificationMixin(UserPassesTestMixin):
     model = User
     success_url = reverse_lazy('users_index')
 
-    def test_func(self) -> bool:
+    def test_func(self):
         return self.request.user == self.get_object()
 
     def handle_no_permission(self):
@@ -35,7 +36,10 @@ class UserModificationMixin(UserPassesTestMixin):
         return redirect('users_index')
 
 
-class TaskDeletekMixin:
+class TaskDeletekMixin(UserPassesTestMixin):
+    model = Task
+    success_url = reverse_lazy('tasks_index')
+
     def test_func(self):
         task = self.get_object()
         return self.request.user == task.author
@@ -47,12 +51,10 @@ class TaskDeletekMixin:
 
 class ProtectedDeleteMixin:
     protected_error_message = "Невозможно удалить объект, так как он связан с другими объектами."  # noqa E501
-    success_message = "Объект успешно удален"
 
     def post(self, request, *args, **kwargs):
         try:
             response = super().post(request, *args, **kwargs)
-            messages.success(request, self.success_message)
             return response
         except ProtectedError as e:
             messages.error(request, self.protected_error_message)

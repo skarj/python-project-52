@@ -1,4 +1,3 @@
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
@@ -40,7 +39,7 @@ class TaskUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
 
 class TaskDeleteView(SuccessMessageMixin, TaskDeletekMixin, LoginRequiredMixin,
-                     UserPassesTestMixin, DeleteView):
+                     DeleteView):
     model = Task
     template_name = "tasks/delete.html"
     pk_url_kwarg = "id"

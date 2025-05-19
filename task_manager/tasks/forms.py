@@ -14,7 +14,8 @@ class UserModelChoiceField(forms.ModelChoiceField):
 class TaskCreateForm(ModelForm):
     executor = UserModelChoiceField(
         queryset=User.objects.all(),
-        label='Исполнитель'
+        label='Исполнитель',
+        required=False
     )
 
     class Meta:
