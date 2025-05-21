@@ -5,7 +5,10 @@ from task_manager.users.models import User
 
 
 class UserCreateForm(UserCreationForm):
-    last_name = forms.CharField(required=True)
+    last_name = forms.CharField(
+        label='Фамилия',
+        required=True
+    )
 
     class Meta:
         model = User
