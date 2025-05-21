@@ -4,7 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django_filters.views import FilterView
 
-from task_manager.mixins import LoginRequiredMixin, TaskDeletekMixin
+from task_manager.mixins import LoginRequiredMixin, TaskDeleteMixin
 from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.forms import TaskCreateForm
 from task_manager.tasks.models import Task
@@ -39,7 +39,7 @@ class TaskUpdateView(SuccessMessageMixin, LoginRequiredMixin,
     success_message = "Задача успешно изменена"
 
 
-class TaskDeleteView(SuccessMessageMixin, TaskDeletekMixin,
+class TaskDeleteView(SuccessMessageMixin, TaskDeleteMixin,
                      LoginRequiredMixin, DeleteView):
     model = Task
     template_name = "tasks/delete.html"

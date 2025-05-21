@@ -36,7 +36,7 @@ class UserModificationMixin(UserPassesTestMixin):
         return redirect('users_index')
 
 
-class TaskDeletekMixin(UserPassesTestMixin):
+class TaskDeleteMixin(UserPassesTestMixin):
     model = Task
     success_url = reverse_lazy('tasks_index')
 
@@ -56,7 +56,7 @@ class ProtectedDeleteMixin:
         try:
             response = super().post(request, *args, **kwargs)
             return response
-        except ProtectedError as e:
+        except ProtectedError:
             messages.error(request, self.protected_error_message)
-            logger.exception(f"ProtectedError when deleting object {self.get_object().id}: {e}")  # noqa E501
+            logger.exception(f"ProtectedError when deleting object {self.get_object().id}")  # noqa E501
             return HttpResponseRedirect(self.success_url)
