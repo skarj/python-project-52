@@ -1,10 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
 from task_manager.users.models import User
-from task_manager.labels.models import Label
 
 
 class TestTasks(TestCase):
@@ -101,7 +101,6 @@ class TestTasks(TestCase):
         self.assertIn(first_label, task.labels.all())
         self.assertIn(second_label, task.labels.all())
         self.assertEqual(task.labels.count(), 2)
-
 
     def test_delete_tasks(self):
         status = Status.objects.create(
