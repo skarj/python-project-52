@@ -40,6 +40,8 @@ class TestUsers(TestCase):
 
         user = User.objects.get(username=create_data["username"])
         self.assertEqual(user.first_name, create_data["first_name"])
+        self.assertEqual(user.last_name, create_data["last_name"])
+        self.assertTrue(user.check_password(create_data['password1']))
 
     def test_update_user(self):
         update_data = {

@@ -4,6 +4,7 @@ from django.urls import reverse
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
 from task_manager.users.models import User
+from task_manager.labels.models import Label
 
 
 class TestTasks(TestCase):
@@ -48,20 +49,36 @@ class TestTasks(TestCase):
         self.assertEqual(task.name, create_data["name"])
 
     def test_update_tasks(self):
-        status = Status.objects.create(
-            name='New'
+        intial_status = Status.objects.create(
+            name='Not Started'
+        )
+
+        updated_status = Status.objects.create(
+            name='In Progress'
+        )
+
+        first_label = Label.objects.create(
+            name='P1'
+        )
+
+        second_label = Label.objects.create(
+            name='P2'
         )
 
         create_data = {
             "name": "Task2",
             "description": "Description",
-            "status": status.id,
+            "status": intial_status.id,
+            "executor": self.user.id,
+            "labels": [first_label.id],
         }
 
         update_data = {
             "name": "Task22",
             "description": "Description2",
-            "status": status.id,
+            "status": updated_status.id,
+            "executor": self.user2.id,
+            "labels": [first_label.id, second_label.id],
         }
 
         self.client.post(
@@ -79,6 +96,12 @@ class TestTasks(TestCase):
         task.refresh_from_db()
         self.assertEqual(task.name, update_data["name"])
         self.assertEqual(task.description, update_data["description"])
+        self.assertEqual(task.status, updated_status)
+        self.assertEqual(task.executor.id, update_data["executor"])
+        self.assertIn(first_label, task.labels.all())
+        self.assertIn(second_label, task.labels.all())
+        self.assertEqual(task.labels.count(), 2)
+
 
     def test_delete_tasks(self):
         status = Status.objects.create(
