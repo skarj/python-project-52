@@ -20,9 +20,6 @@ class UserCreateForm(UserCreationForm):
 
 
 class UserUpdateForm(UserCreateForm):
-    class Meta(UserCreateForm.Meta):
-        fields = UserCreateForm.Meta.fields
-
     #  to be able to update user without "user already exists" error
     def clean_username(self):
         return self.cleaned_data.get('username')
