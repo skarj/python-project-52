@@ -4,7 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django_filters.views import FilterView
 
-from task_manager.mixins import LoginRequiredMixin, TaskDeleteMixin
+from task_manager.mixins import LoginRequiredMixin, OwnershipRequiredMixin
 from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.forms import TaskCreateForm
 from task_manager.tasks.models import Task
@@ -39,13 +39,16 @@ class TaskUpdateView(SuccessMessageMixin, LoginRequiredMixin,
     success_message = "Задача успешно изменена"
 
 
-class TaskDeleteView(SuccessMessageMixin, TaskDeleteMixin,
+class TaskDeleteView(SuccessMessageMixin, OwnershipRequiredMixin,
                      LoginRequiredMixin, DeleteView):
     model = Task
+    success_url = reverse_lazy('tasks_index')
+    redirect_url_name = 'tasks_index'
     template_name = "tasks/delete.html"
     pk_url_kwarg = "id"
     success_url = reverse_lazy("tasks_index")
     success_message = "Задача успешно удалена"
+    permission_denied_message = "Задачу может удалить только ее автор"
 
 
 class TaskShowView(LoginRequiredMixin, DetailView):

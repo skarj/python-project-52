@@ -5,10 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
-
-from task_manager.tasks.models import Task
-from task_manager.users.models import User
+from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
@@ -22,31 +19,19 @@ class LoginRequiredMixin(LoginRequiredMixin):
         return redirect(reverse('login'))
 
 
-class UserModificationMixin(UserPassesTestMixin):
-    model = User
-    success_url = reverse_lazy('users_index')
+class OwnershipRequiredMixin(UserPassesTestMixin):
+    model = None
+    success_url = None
+    permission_denied_message = "У вас нет прав для выполнения этого действия."
+    redirect_url_name = None
 
     def test_func(self):
-        return self.request.user == self.get_object()
+        obj = self.get_object()
+        return self.request.user == getattr(obj, 'author', obj)
 
     def handle_no_permission(self):
-        messages.error(
-            self.request, "У вас нет прав для изменения другого пользователя."
-        )
-        return redirect('users_index')
-
-
-class TaskDeleteMixin(UserPassesTestMixin):
-    model = Task
-    success_url = reverse_lazy('tasks_index')
-
-    def test_func(self):
-        task = self.get_object()
-        return self.request.user == task.author
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Задачу может удалить только ее автор")
-        return redirect("tasks_index")
+        messages.error(self.request, self.permission_denied_message)
+        return redirect(self.redirect_url_name or self.success_url)
 
 
 class ProtectedDeleteMixin:
