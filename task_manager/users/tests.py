@@ -43,6 +43,21 @@ class TestUsers(TestCase):
         self.assertEqual(user.last_name, create_data["last_name"])
         self.assertTrue(user.check_password(create_data['password1']))
 
+    def test_create_user_wo_lastname(self):
+        create_data = {
+            "username": "ddefo",
+            "first_name": "Daniel",
+            "last_name": "",
+            "password1": self.password,
+            "password2": self.password,
+        }
+
+        response = self.client.post(reverse("users_create"), data=create_data)
+        self.assertNotEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertFalse(User.objects.filter(username=create_data["username"]).exists())
+
     def test_update_user(self):
         update_data = {
             "username": "jdaniel",
