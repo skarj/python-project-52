@@ -1,19 +1,13 @@
 from django.db import models
 
+from task_manager.models import TimeStampedModel
 
-class Label(models.Model):
+
+class Label(TimeStampedModel):
     name = models.CharField(
         "Имя",
         max_length=255,
         unique=True
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
     )
 
     def __str__(self):

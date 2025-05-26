@@ -1,11 +1,12 @@
 from django.db import models
 
 from task_manager.labels.models import Label
+from task_manager.models import TimeStampedModel
 from task_manager.statuses.models import Status
 from task_manager.users.models import User
 
 
-class Task(models.Model):
+class Task(TimeStampedModel):
     name = models.CharField(
         "Имя",
         max_length=255,
@@ -43,14 +44,6 @@ class Task(models.Model):
         verbose_name="Метки",
         through="LabelTask",
         blank=True
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
     )
 
 
