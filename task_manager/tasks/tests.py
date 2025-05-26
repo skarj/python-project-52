@@ -178,7 +178,7 @@ class TestTasks(TestCase):
             response = self.client.get(reverse('tasks_index'))
             self.assertEqual(response.status_code, 200)
 
-        with self.assertNumQueries(6):
+        with self.assertNumQueries(4):
             response = self.client.get(
                 reverse('tasks_show', kwargs={'id': task.id})
             )

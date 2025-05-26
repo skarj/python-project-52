@@ -65,15 +65,10 @@ class TaskShowView(LoginRequiredMixin, DetailView):
     context_object_name = "task"
     pk_url_kwarg = "id"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["labels"] = self.object.labels.all()
-        return context
-
     # Fetch related foreign key objects in one query
-    # def get_queryset(self):
-    #     return (
-    #         super().get_queryset()
-    #         .select_related("author", "executor", "status")
-    #         .prefetch_related("labels")
-    #     )
+    def get_queryset(self):
+        return (
+            super().get_queryset()
+            .select_related("author", "executor", "status")
+            .prefetch_related("labels")
+        )
