@@ -153,3 +153,33 @@ class TestTasks(TestCase):
         self.assertEqual(response.status_code, 302)
 
         self.assertTrue(Task.objects.filter(pk=task.id).exists())
+
+    def test_db_requests_number(self):
+        status = Status.objects.create(
+            name='In Descovery'
+        )
+
+        create_data = {
+            "name": "Task9",
+            "description": "Description",
+            "status": status.id,
+        }
+
+        response = self.client.post(
+            reverse("tasks_create"),
+            data=create_data
+        )
+        self.assertEqual(response.status_code, 302)
+
+        task = Task.objects.get(name=create_data["name"])
+        self.assertEqual(task.name, create_data["name"])
+
+        with self.assertNumQueries(6):
+            response = self.client.get(reverse('tasks_index'))
+            self.assertEqual(response.status_code, 200)
+
+        with self.assertNumQueries(6):
+            response = self.client.get(
+                reverse('tasks_show', kwargs={'id': task.id})
+            )
+            self.assertEqual(response.status_code, 200)
