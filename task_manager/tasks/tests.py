@@ -183,3 +183,60 @@ class TestTasks(TestCase):
                 reverse('tasks_show', kwargs={'id': task.id})
             )
             self.assertEqual(response.status_code, 200)
+
+
+    def test_filter(self):
+        status1 = Status.objects.create(
+            name='Resolved'
+        )
+
+        status2 = Status.objects.create(
+            name='Closed'
+        )
+
+        label = Label.objects.create(
+            name='P1'
+        )
+
+        task1 = Task.objects.create(
+            name="Task11",
+            author_id=self.user.id,
+            description="Description",
+            status=status1,
+        )
+
+        task2 = Task.objects.create(
+            name="Task12",
+            author_id=self.user2.id,
+            description="Description",
+            status=status2,
+        )
+
+        task2.labels.add(label)
+
+        response = self.client.get(
+            reverse('tasks_index'),
+            data={'created_by_me': 'on'}
+        )
+
+        tasks = response.context['tasks']
+        self.assertIn(task1, tasks)
+        self.assertNotIn(task2, tasks)
+
+        response = self.client.get(
+            reverse('tasks_index'),
+            data={'status': status1.id}
+        )
+
+        tasks = response.context['tasks']
+        self.assertIn(task1, tasks)
+        self.assertNotIn(task2, tasks)
+
+        response = self.client.get(
+            reverse('tasks_index'),
+            data={'labels': label.id}
+        )
+
+        tasks = response.context['tasks']
+        self.assertIn(task2, tasks)
+        self.assertNotIn(task1, tasks)
