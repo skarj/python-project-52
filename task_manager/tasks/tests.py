@@ -154,7 +154,7 @@ class TestTasks(TestCase):
 
         self.assertTrue(Task.objects.filter(pk=task.id).exists())
 
-    def test_db_requests_number(self):
+    def test_db_queries_number(self):
         status = Status.objects.create(
             name='In Descovery'
         )
