@@ -16,6 +16,14 @@ class TaskIndexView(LoginRequiredMixin, FilterView):
     context_object_name = "tasks"
     filterset_class = TaskFilter
 
+    # Fetch related foreign key objects in one query
+    def get_queryset(self):
+        return (
+            super().get_queryset().select_related(
+                'author', 'executor', 'status'
+            )
+        )
+
 
 class TaskCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Task
