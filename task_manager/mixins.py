@@ -20,6 +20,7 @@ class LoginRequiredMixin(LoginRequiredMixin):
 
 
 class OwnershipRequiredMixin(UserPassesTestMixin):
+    ownership_field = 'author'
     model = None
     success_url = None
     permission_denied_message = "У вас нет прав для выполнения этого действия."
@@ -27,7 +28,8 @@ class OwnershipRequiredMixin(UserPassesTestMixin):
 
     def test_func(self):
         obj = self.get_object()
-        return self.request.user == getattr(obj, 'author', obj)
+        owner = getattr(obj, self.ownership_field, obj)
+        return self.request.user == owner
 
     def handle_no_permission(self):
         messages.error(self.request, self.permission_denied_message)
