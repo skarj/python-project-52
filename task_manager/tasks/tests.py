@@ -184,7 +184,6 @@ class TestTasks(TestCase):
             )
             self.assertEqual(response.status_code, 200)
 
-
     def test_filter(self):
         status1 = Status.objects.create(
             name='Resolved'
