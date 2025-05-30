@@ -46,7 +46,6 @@ class TaskDeleteView(SuccessMessageMixin, OwnershipRequiredMixin,
     permission_denied_redirect_url = "tasks_index"
     template_name = "tasks/delete.html"
     pk_url_kwarg = "id"
-    success_url = reverse_lazy("tasks_index")
     success_message = "Задача успешно удалена"
     permission_denied_message = "Задачу может удалить только ее автор"
     ownership_field = 'author'
