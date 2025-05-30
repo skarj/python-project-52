@@ -39,7 +39,6 @@ class UserUpdateView(SuccessMessageMixin, OwnershipRequiredMixin,
     pk_url_kwarg = "id"
     success_message = "Пользователь успешно изменен"
     permission_denied_message = "У вас нет прав для изменения другого пользователя."  # noqa E501
-    ownership_field = "author"
 
 
 class UserDeleteView(SuccessMessageMixin, OwnershipRequiredMixin,
@@ -53,4 +52,3 @@ class UserDeleteView(SuccessMessageMixin, OwnershipRequiredMixin,
     success_message = "Пользователь успешно удален"
     protected_error_message = "Невозможно удалить пользователя, так как он связан с другими объектами."  # noqa E501
     permission_denied_message = "У вас нет прав для изменения другого пользователя."  # noqa E501
-    ownership_field = "author"
