@@ -5,8 +5,11 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from task_manager.mixins import (LoginRequiredMixin, OwnershipRequiredMixin,
-                                 ProtectedDeleteMixin)
+from task_manager.mixins import (
+    LoginRequiredMixin,
+    OwnershipRequiredMixin,
+    ProtectedDeleteMixin,
+)
 from task_manager.users import forms
 from task_manager.users.models import User
 
