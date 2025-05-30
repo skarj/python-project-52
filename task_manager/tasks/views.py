@@ -17,6 +17,7 @@ class TaskIndexView(LoginRequiredMixin, FilterView):
     filterset_class = TaskFilter
     queryset = Task.objects.select_related("author", "executor", "status")
 
+
 class TaskCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Task
     form_class = TaskCreateForm
