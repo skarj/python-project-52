@@ -20,11 +20,10 @@ class LoginRequiredMixin(LoginRequiredMixin):
 
 
 class OwnershipRequiredMixin(UserPassesTestMixin):
-    ownership_field = 'author'
-    model = None
-    success_url = None
+    ownership_field = None
+    success_url = 'index'
+    permission_denied_redirect_url = 'index'
     permission_denied_message = "У вас нет прав для выполнения этого действия."
-    redirect_url_name = None
 
     def test_func(self):
         obj = self.get_object()
@@ -33,7 +32,7 @@ class OwnershipRequiredMixin(UserPassesTestMixin):
 
     def handle_no_permission(self):
         messages.error(self.request, self.permission_denied_message)
-        return redirect(self.redirect_url_name or self.success_url)
+        return redirect(self.permission_denied_redirect_url or self.success_url)  # noqa E501
 
 
 class ProtectedDeleteMixin:

@@ -15,6 +15,7 @@ class TaskIndexView(LoginRequiredMixin, FilterView):
     template_name = "tasks/index.html"
     context_object_name = "tasks"
     filterset_class = TaskFilter
+    queryset = Task.objects.select_related("author", "executor", "status")
 
     # Fetch related foreign key objects in one query
     def get_queryset(self):
@@ -51,12 +52,13 @@ class TaskDeleteView(SuccessMessageMixin, OwnershipRequiredMixin,
                      LoginRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy("tasks_index")
-    redirect_url_name = "tasks_index"
+    permission_denied_redirect_url = "tasks_index"
     template_name = "tasks/delete.html"
     pk_url_kwarg = "id"
     success_url = reverse_lazy("tasks_index")
     success_message = "Задача успешно удалена"
     permission_denied_message = "Задачу может удалить только ее автор"
+    ownership_field = 'author'
 
 
 class TaskShowView(LoginRequiredMixin, DetailView):
@@ -64,11 +66,8 @@ class TaskShowView(LoginRequiredMixin, DetailView):
     template_name = "tasks/show.html"
     context_object_name = "task"
     pk_url_kwarg = "id"
-
-    # Fetch related foreign key objects in one query
-    def get_queryset(self):
-        return (
-            super().get_queryset()
-            .select_related("author", "executor", "status")
-            .prefetch_related("labels")
-        )
+    queryset = Task.objects.select_related(
+        "author",
+        "executor",
+        "status"
+    ).prefetch_related("labels")
