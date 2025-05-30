@@ -32,25 +32,25 @@ class UserCreateView(SuccessMessageMixin, CreateView):
 class UserUpdateView(SuccessMessageMixin, OwnershipRequiredMixin,
                      LoginRequiredMixin, UpdateView):
     model = User
-    success_url = reverse_lazy('users_index')
-    permission_denied_redirect_url = 'users_index'
+    success_url = reverse_lazy("users_index")
+    permission_denied_redirect_url = reverse_lazy("users_index")
     template_name = "users/update.html"
     form_class = forms.UserUpdateForm
     pk_url_kwarg = "id"
     success_message = "Пользователь успешно изменен"
     permission_denied_message = "У вас нет прав для изменения другого пользователя."  # noqa E501
-    ownership_field = 'author'
+    ownership_field = "author"
 
 
 class UserDeleteView(SuccessMessageMixin, OwnershipRequiredMixin,
                      LoginRequiredMixin, ProtectedDeleteMixin,
                      DeleteView):
     model = User
-    success_url = reverse_lazy('users_index')
-    permission_denied_redirect_url = 'users_index'
+    success_url = reverse_lazy("users_index")
+    permission_denied_redirect_url = reverse_lazy("users_index")
     template_name = "users/delete.html"
     pk_url_kwarg = "id"
     success_message = "Пользователь успешно удален"
     protected_error_message = "Невозможно удалить пользователя, так как он связан с другими объектами."  # noqa E501
     permission_denied_message = "У вас нет прав для изменения другого пользователя."  # noqa E501
-    ownership_field = 'author'
+    ownership_field = "author"

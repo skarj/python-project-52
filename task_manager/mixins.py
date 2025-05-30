@@ -21,7 +21,7 @@ class LoginRequiredMixin(LoginRequiredMixin):
 
 class OwnershipRequiredMixin(UserPassesTestMixin):
     ownership_field = None
-    permission_denied_redirect_url = 'index'
+    permission_denied_redirect_url = None
     permission_denied_message = "У вас нет прав для выполнения этого действия."
 
     def test_func(self):
