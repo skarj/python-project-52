@@ -29,7 +29,7 @@ class OwnershipRequiredMixin(UserPassesTestMixin):
         return self.request.user == (
             obj
             if self.ownership_field is None
-            else getattr(obj, self.ownership_field, obj)
+            else getattr(obj, self.ownership_field)
         )
 
     def handle_no_permission(self):
